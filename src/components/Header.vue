@@ -45,13 +45,13 @@ const options = [
           {{ VITE_APP_TITLE }}
         </div>
       </div>
-      <router-link
+      <RouterLink
         class="transition ease-in-out duration-200"
         flex="~ gap-2" justify-center items-center
         to="/" :title="t('menu.preprints')" hover="text-teal-600"
       >
         <div i="carbon-campsite" />{{ t('menu.preprints') }}
-      </router-link>
+      </RouterLink>
     </div>
     <div flex="~ gap-4" justify-center items-center>
       <NDropdown :options="options">
