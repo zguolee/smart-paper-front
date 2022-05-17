@@ -5,7 +5,7 @@
 import { VitePWA } from 'vite-plugin-pwa'
 
 export function configPWAPlugin(env: ViteEnv) {
-  const { VITE_USE_PWA, VITE_GLOB_APP_TITLE, VITE_GLOB_APP_SHORT_NAME } = env
+  const { VITE_APP_TITLE, VITE_APP_SHORT_NAME, VITE_USE_PWA } = env
 
   if (!VITE_USE_PWA)
     return []
@@ -14,8 +14,8 @@ export function configPWAPlugin(env: ViteEnv) {
     registerType: 'autoUpdate',
     includeAssets: ['favicon.svg', 'safari-pinned-tab.svg'],
     manifest: {
-      name: VITE_GLOB_APP_TITLE,
-      short_name: VITE_GLOB_APP_SHORT_NAME,
+      name: VITE_APP_TITLE,
+      short_name: VITE_APP_SHORT_NAME,
       theme_color: '#ffffff',
       icons: [
         {
