@@ -81,7 +81,6 @@ const options = [
       />
       <a
         class="transition ease-in-out duration-200"
-        flex="~" justify-center items-center
         rel="noreferrer" href="https://github.com/zguolee/easy-paper" target="_blank" title="GitHub"
       >
         <div i="carbon-logo-github" />

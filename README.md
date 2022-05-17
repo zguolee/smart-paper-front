@@ -106,6 +106,12 @@ Mocking up web app with <b>Vitesse</b><sup><em>(speed)</em></sup><br>
 
 ## Usage
 
+### Install
+
+```
+pnpm install
+```
+
 ### Development
 
 Just run

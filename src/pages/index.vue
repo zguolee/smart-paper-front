@@ -1,13 +1,16 @@
 <script setup lang="ts">
 import { useUserStore } from '~/stores/user'
 
-const user = useUserStore()
-const name = $ref(user.savedName)
+const userStore = useUserStore()
 
 const router = useRouter()
+
+userStore.login({ username: 'admin', password: '123456', goHome: false })
+
+console.log(userStore.getUserInfo())
 const go = () => {
-  if (name)
-    router.push(`/hi/${encodeURIComponent(name)}`)
+  // if (name)
+  //   router.push(`/hi/${encodeURIComponent(name)}`)
 }
 
 const { t } = useI18n()
@@ -25,7 +28,7 @@ const { t } = useI18n()
 
     <div class="py-4" />
 
-    <input
+    <!-- <input
       id="input"
       v-model="name"
       :placeholder="t('intro.whats-your-name')"
@@ -44,7 +47,7 @@ const { t } = useI18n()
       <button class="m-3 text-sm btn" :disabled="!name" @click="go">
         {{ t('button.go') }}
       </button>
-    </div>
+    </div> -->
   </div>
 </template>
 
