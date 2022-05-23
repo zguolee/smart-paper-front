@@ -1,4 +1,5 @@
 import type { AxiosResponse } from 'axios'
+import { useMessage } from 'naive-ui'
 import type { AxiosTransform, CreateAxiosOptions } from './axiosTransform'
 import { VAxios } from './Axios'
 import { checkStatus } from './checkStatus'
@@ -8,6 +9,8 @@ import { ContentTypeEnum, RequestEnum, ResultEnum } from '~/enums/httpEnum'
 import { deepMerge, setObjToUrlParams } from '~/utils'
 import { getToken } from '~/utils/auth'
 import { isString } from '~/utils/is'
+
+const createMessage = useMessage()
 
 const urlPrefix = ''
 
@@ -52,14 +55,13 @@ const transform: AxiosTransform = {
         if (message)
           timeoutMsg = message
     }
-
     // errorMessageMode='modal' 的时候会显示modal错误弹窗，而不是消息提示，用于一些比较重要的错误
     // errorMessageMode='none' 一般是调用时明确表示不希望自动弹出错误提示
     if (options.errorMessageMode === 'modal')
       console.error({ title: '错误提示', message: timeoutMsg })
 
     else if (options.errorMessageMode === 'message')
-      console.error(timeoutMsg)
+      createMessage.error(timeoutMsg)
 
     throw new Error(timeoutMsg || 'The interface request failed, please try again later!')
   },
@@ -147,7 +149,7 @@ const transform: AxiosTransform = {
           console.error({ title: '错误提示', message: errMessage })
 
         else if (errorMessageMode === 'message')
-          console.error(errMessage)
+          createMessage.error(errMessage)
 
         return Promise.reject(error)
       }

@@ -1,17 +1,5 @@
 <script setup lang="ts">
-import { useUserStore } from '~/stores/user'
-
-const userStore = useUserStore()
-
 const router = useRouter()
-
-userStore.login({ username: 'admin', password: '123456', goHome: false })
-
-console.log(userStore.getUserInfo())
-const go = () => {
-  // if (name)
-  //   router.push(`/hi/${encodeURIComponent(name)}`)
-}
 
 const { t } = useI18n()
 </script>

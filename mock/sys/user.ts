@@ -6,7 +6,7 @@ export function createFakeUserList() {
   return [
     {
       userId: '1',
-      username: 'admin',
+      username: 'admin@mail.com',
       realName: 'Admin',
       avatar: 'https://q1.qlogo.cn/g?b=qq&nk=190848757&s=640',
       desc: 'manager',
@@ -46,7 +46,24 @@ const fakeCodeList: any = {
 }
 
 export default [
-  // mock user login
+  {
+    url: '/api/register',
+    timeout: 200,
+    method: 'post',
+    response: ({ body }: { body: { username: string; password: string } }) => {
+      const { username } = body
+      const checkUser = createFakeUserList().find(
+        item => item.username === username,
+      )
+      if (!checkUser) {
+        return resultSuccess({
+          username,
+        })
+      }
+
+      return resultError('User already exists!')
+    },
+  },
   {
     url: '/api/login',
     timeout: 200,

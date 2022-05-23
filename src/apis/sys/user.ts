@@ -4,14 +4,24 @@ import { defHttp } from '~/utils/http'
 
 enum Api {
   Login = '/login',
+  Register = '/register',
   Logout = '/logout',
   GetUserInfo = '/users',
 }
 
-/**
- * @description: user login api
- */
-export function loginApi(params: LoginParams, mode: ErrorMessageMode = 'modal') {
+export function registerApi(params: LoginParams, mode: ErrorMessageMode = 'message') {
+  return defHttp.post(
+    {
+      url: Api.Register,
+      params,
+    },
+    {
+      errorMessageMode: mode,
+    },
+  )
+}
+
+export function loginApi(params: LoginParams, mode: ErrorMessageMode = 'message') {
   return defHttp.post<LoginResultModel>(
     {
       url: Api.Login,
@@ -23,9 +33,6 @@ export function loginApi(params: LoginParams, mode: ErrorMessageMode = 'modal') 
   )
 }
 
-/**
- * @description: getUserInfo
- */
 export function getUserInfoApi() {
   return defHttp.get<GetUserInfoModel>({ url: Api.GetUserInfo })
 }

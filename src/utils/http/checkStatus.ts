@@ -1,7 +1,9 @@
+import { useMessage } from 'naive-ui'
 import type { ErrorMessageMode } from './types'
 import { useUserStore } from '~/stores/user'
 import { SessionTimeoutProcessingEnum } from '~/enums/appEnum'
 import projectSetting from '~/settings/projectSetting'
+const createMessage = useMessage()
 
 const stp = projectSetting.sessionTimeoutProcessing
 
@@ -69,6 +71,6 @@ export function checkStatus(
       console.error({ title: '错误提示', message: errorMessage })
 
     else if (errorMessageMode === 'message')
-      console.error(errorMessage)
+      createMessage.error(errorMessage)
   }
 }

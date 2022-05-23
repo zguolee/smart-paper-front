@@ -1,9 +1,14 @@
 <script setup lang="ts">
 import { toggleDark } from '~/composables'
 import { getAppEnvConfig } from '~/utils/env'
+import { useUserStore } from '~/stores/user'
+
+const userStore = useUserStore()
 
 const { t, availableLocales, locale } = useI18n()
 const { VITE_APP_TITLE } = getAppEnvConfig()
+
+const userInfo = computed(() => userStore.getUserInfo())
 
 const toggleLocales = () => {
   // change to some real logic
@@ -54,18 +59,18 @@ const options = [
       </RouterLink>
     </div>
     <div flex="~ gap-4" justify-center items-center>
-      <NDropdown :options="options">
+      <n-dropdown :options="options">
         <div flex="~ gap-2" justify-center items-center>
-          <NAvatar
+          <n-avatar
             round
             size="small"
-            src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
+            :src="userInfo.avatar"
           />
           <div hover="text-teal-600">
-            User
+            {{ userInfo.realName }}
           </div>
         </div>
-      </NDropdown>
+      </n-dropdown>
       <div
         class="transition ease-in-out duration-200"
         i="carbon-language" :title="t('button.toggle_langs')"

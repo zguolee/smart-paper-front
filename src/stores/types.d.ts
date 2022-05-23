@@ -5,4 +5,6 @@ export interface UserInfo {
   username: string
   realName: string
   roles: RoleInfo[]
+  avatar: string
+  roles: RoleInfo[]
 }
