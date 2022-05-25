@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import { getAppEnvConfig } from '~/utils/env'
+
+const { VITE_APP_TITLE } = getAppEnvConfig()
+
 const router = useRouter()
 
 const { t } = useI18n()
@@ -6,40 +10,42 @@ const { t } = useI18n()
 
 <template>
   <div>
-    <div class="text-4xl">
-      <div i="carbon-campsite" />
-    </div>
-    <p>Vitesse</p>
-    <p>
-      <em class="text-sm opacity-75">{{ t('intro.desc') }}</em>
-    </p>
-
-    <div class="py-4" />
-
-    <!-- <input
-      id="input"
-      v-model="name"
-      :placeholder="t('intro.whats-your-name')"
-      :aria-label="t('intro.whats-your-name')"
-      type="text"
-      autocomplete="false"
-      class="bg-transparent text-center w-250px"
-      p="x4 y2"
-      border="~ rounded gray-200 dark:gray-700"
-      outline="none active:none"
-      @keydown.enter="go"
+    <nav
+      class="shadow text-xl p-4"
+      dark="shadow-gray-700"
+      flex="~" justify-between items-center
     >
-    <label class="hidden" for="input">{{ t('intro.whats-your-name') }}</label>
-
-    <div>
-      <button class="m-3 text-sm btn" :disabled="!name" @click="go">
-        {{ t('button.go') }}
-      </button>
-    </div> -->
+      <div
+        flex="~ gap-4" justify-center items-center
+      >
+        <div
+          class="transition ease-in-out duration-200"
+          flex="~ gap-2" justify-center items-center
+        >
+          <div class="bg-gradient-to-br from-blue-200 to-blue-500" i="carbon-campsite" text="3xl" />
+          <div class="font-medium">
+            {{ VITE_APP_TITLE }}
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div bg="green-700" text="white center" p="20">
+      <div text="3xl">
+        Try Smart Paper, the world's most popular paper submission platform
+      </div>
+      <div m="t10">
+        Millions of people around the world have already made Smart Paper
+        <br>
+        the place where their dream happens.
+      </div>
+      <n-button class="mx-auto mt-10 !bg-white !text-green-600 !w-40" type="default" block @click="router.push('/sys/login')">
+        开始
+      </n-button>
+    </div>
   </div>
 </template>
 
 <route lang="yaml">
 meta:
-  layout: home
+  layout: default
 </route>

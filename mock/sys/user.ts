@@ -8,7 +8,7 @@ export function createFakeUserList() {
       userId: '1',
       username: 'admin@mail.com',
       realName: 'Admin',
-      avatar: 'https://q1.qlogo.cn/g?b=qq&nk=190848757&s=640',
+      avatar: 'https://avatars.githubusercontent.com/u/40738594?s=40&v=4',
       desc: 'manager',
       password: '123456',
       token: 'fakeToken1',
