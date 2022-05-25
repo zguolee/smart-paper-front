@@ -6,6 +6,8 @@ import { useUserStore } from '~/stores/user'
 
 const userStore = useUserStore()
 
+const router = useRouter()
+
 interface ModelType {
   username: string
   password: string
@@ -78,6 +80,17 @@ const handleLogin = (e: MouseEvent) => {
       <n-button class="mt-10" type="primary" block @click="handleLogin">
         登录
       </n-button>
+      <div p="t4" flex="~" justify-end>
+        <n-button
+          text
+          tag="a"
+          target="_blank"
+          type="primary"
+          @click="router.push('/sys/register')"
+        >
+          注册
+        </n-button>
+      </div>
     </n-form>
   </div>
 </template>

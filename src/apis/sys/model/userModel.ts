@@ -33,4 +33,6 @@ export interface GetUserInfoModel {
   realName: string
   // 介绍
   desc?: string
+  // 头像
+  avatar?: string
 }

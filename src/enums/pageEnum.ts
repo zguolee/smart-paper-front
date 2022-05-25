@@ -5,6 +5,6 @@ export enum PageEnum {
   // basic home path
   BASE_HOME = '/home',
 
-  // basic profile path
-  BASE_PROFILE = '/profile',
+  // basic dashboard path
+  BASE_DASHBOARD = '/dashboard',
 }

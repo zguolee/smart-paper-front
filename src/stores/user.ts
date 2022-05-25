@@ -68,7 +68,7 @@ export const useUserStore = defineStore('user', () => {
       const userInfo = await getUserInfoAction()
       const sessionTimeoutTemp = sessionTimeout.value
       sessionTimeoutTemp && setSessionTimeout(false)
-      !sessionTimeoutTemp && goHome && router.replace(PageEnum.BASE_PROFILE)
+      !sessionTimeoutTemp && goHome && router.replace(PageEnum.BASE_DASHBOARD)
       return userInfo
     }
     catch (error) {

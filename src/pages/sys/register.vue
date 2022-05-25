@@ -3,6 +3,8 @@ import type { FormInst, FormItemInst, FormItemRule, FormRules } from 'naive-ui'
 import { getAppEnvConfig } from '~/utils/env'
 import { registerApi } from '~/apis/sys/user'
 
+const router = useRouter()
+
 interface ModelType {
   username: string
   password: string
@@ -111,6 +113,17 @@ const handleRegister = (e: MouseEvent) => {
       <n-button class="mt-10" type="primary" block @click="handleRegister">
         注册
       </n-button>
+      <div p="t4" flex="~" justify-end>
+        <n-button
+          text
+          tag="a"
+          target="_blank"
+          type="primary"
+          @click="router.back()"
+        >
+          已有账号
+        </n-button>
+      </div>
     </n-form>
   </div>
 </template>
