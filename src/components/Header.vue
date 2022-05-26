@@ -5,6 +5,8 @@ import { useUserStore } from '~/stores/user'
 
 const userStore = useUserStore()
 
+const router = useRouter()
+
 const { t, availableLocales, locale } = useI18n()
 const { VITE_APP_TITLE } = getAppEnvConfig()
 
@@ -39,24 +41,27 @@ const options = [
     flex="~" justify-between items-center
   >
     <div
-      flex="~ gap-4" justify-center items-center
+      flex="~ gap-10" justify-center items-center
     >
       <div
         class="transition ease-in-out duration-200"
         flex="~ gap-2" justify-center items-center
       >
-        <div class="bg-gradient-to-br from-blue-200 to-blue-500" i="carbon-campsite" text="3xl" />
+        <div class="bg-gradient-to-br from-green-200 to-green-500" i="carbon-campsite" text="3xl" />
         <div class="font-medium">
           {{ VITE_APP_TITLE }}
         </div>
       </div>
-      <RouterLink
-        class="transition ease-in-out duration-200"
-        flex="~ gap-2" justify-center items-center
-        to="/" :title="t('menu.preprints')" hover="text-teal-600"
+      <n-button
+        class="text-xl"
+        text
+        tag="a"
+        target="_blank"
+        type="primary"
+        @click="router.push('/dashboard')"
       >
-        <div i="carbon-campsite" />{{ t('menu.preprints') }}
-      </RouterLink>
+        {{ t('menu.preprints') }}
+      </n-button>
     </div>
     <div flex="~ gap-4" justify-center items-center>
       <n-dropdown :options="options">
@@ -83,12 +88,6 @@ const options = [
         hover="text-teal-600"
         @click="toggleDark()"
       />
-      <a
-        class="transition ease-in-out duration-200"
-        rel="noreferrer" href="https://github.com/zguolee/easy-paper" target="_blank" title="GitHub"
-      >
-        <div i="carbon-logo-github" />
-      </a>
     </div>
   </nav>
 </template>

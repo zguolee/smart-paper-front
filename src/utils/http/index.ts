@@ -1,5 +1,4 @@
 import type { AxiosResponse } from 'axios'
-import { useMessage } from 'naive-ui'
 import type { AxiosTransform, CreateAxiosOptions } from './axiosTransform'
 import { VAxios } from './Axios'
 import { checkStatus } from './checkStatus'
@@ -9,8 +8,6 @@ import { ContentTypeEnum, RequestEnum, ResultEnum } from '~/enums/httpEnum'
 import { deepMerge, setObjToUrlParams } from '~/utils'
 import { getToken } from '~/utils/auth'
 import { isString } from '~/utils/is'
-
-const createMessage = useMessage()
 
 const urlPrefix = ''
 
@@ -61,9 +58,10 @@ const transform: AxiosTransform = {
       console.error({ title: '错误提示', message: timeoutMsg })
 
     else if (options.errorMessageMode === 'message')
-      createMessage.error(timeoutMsg)
+      console.error(timeoutMsg)
 
-    throw new Error(timeoutMsg || 'The interface request failed, please try again later!')
+    // throw new Error(timeoutMsg || 'The interface request failed, please try again later!')
+    return timeoutMsg
   },
 
   // 请求之前处理config

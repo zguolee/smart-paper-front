@@ -63,6 +63,8 @@ export const useUserStore = defineStore('user', () => {
       const data = await loginApi(loginParams, mode)
       const { token } = data
       // save token
+      if (!token)
+        return null
       setUserToken(token)
       // get user info
       const userInfo = await getUserInfoAction()
