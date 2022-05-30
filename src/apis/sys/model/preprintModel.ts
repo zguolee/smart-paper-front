@@ -1,3 +1,5 @@
+import type { BasicFetchResult, BasicPageParams } from '~/apis/model/baseModel'
+
 export interface AuthorModel {
   id: string | number
   name: string
@@ -13,7 +15,7 @@ export interface JournalModel {
   year: string
 }
 
-export interface GetPreprintListModel {
+export interface PreprintModel {
   id: string | number
   title: string
   abstract: string
@@ -23,3 +25,7 @@ export interface GetPreprintListModel {
   updateTime: string
   state?: 'First trial' | 'Reception' | 'Accepted' | 'Rejected' | 'Pay' | 'Finish'
 }
+
+export type PreprintParams = BasicPageParams
+
+export type GetPreprintListModel = BasicFetchResult<PreprintModel>

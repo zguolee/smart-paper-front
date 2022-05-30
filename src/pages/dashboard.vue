@@ -1,29 +1,45 @@
 <script setup lang="ts">
 import { getPreprintListApi } from '~/apis/sys/preprint'
-import type { GetPreprintListModel } from '~/apis//sys/model/preprintModel'
+import type { PreprintModel } from '~/apis//sys/model/preprintModel'
 
 const router = useRouter()
 
 const { t } = useI18n()
 
-const checkStrategy = ref<'all' | 'parent' | 'child'>('all')
+const checkStrategy = ref<'all' | 'not_submitted' | 'submitted'>('all')
 
-const preprintList = ref<GetPreprintListModel[]>()
+const preprintResult = ref<{
+  items: PreprintModel[]
+  total: number
+}>()
 
-const handlePreprintList = async (
+const paginationState = ref<{
+  page: number
+  pageSize: number
+}>({
+  page: 1,
+  pageSize: 5,
+})
+
+const getPreprintList = async (
   page: number,
-  size: number,
-  strategy: 'all' | 'parent' | 'child',
+  pageSize: number,
+  strategy: 'all' | 'not_submitted' | 'submitted',
 ) => {
-  const res = await getPreprintListApi()
-  preprintList.value = res
+  const res = await getPreprintListApi({ page, pageSize })
+  preprintResult.value = res
 }
-handlePreprintList(1, 10, checkStrategy.value)
+getPreprintList(paginationState.value.page, paginationState.value.pageSize, checkStrategy.value)
+
+const handlePreprintList = (page: number) => {
+  paginationState.value.page = page
+  getPreprintList(paginationState.value.page, paginationState.value.pageSize, checkStrategy.value)
+}
 </script>
 
 <template>
   <div>
-    <div class="rounded-lg h-200 p-10 w-80%" bg="white dark:gray-700" m="t-10 auto">
+    <div class="rounded-lg p-10 w-80%" bg="white dark:gray-700" m="t-10 auto">
       <div m="b-2" flex="~ gap-10" justify="between" items="center">
         <div>
           {{ t('dashboard.preprint_list') }}
@@ -45,7 +61,7 @@ handlePreprintList(1, 10, checkStrategy.value)
         {{ t('dashboard.actions.add_new_preprint') }}
       </n-button>
       <n-list bordered>
-        <n-list-item v-for="(preprint, preprintIdx) of preprintList" :key="preprintIdx">
+        <n-list-item v-for="(preprint, preprintIdx) of preprintResult?.items" :key="preprintIdx">
           <div flex="~ gap-4" justify-start items-center>
             <n-thing :title="preprint.title">
               <template #avatar>
@@ -65,6 +81,13 @@ handlePreprintList(1, 10, checkStrategy.value)
           </div>
         </n-list-item>
       </n-list>
+      <div p="t4" flex="~" justify="center">
+        <n-pagination
+          v-model:page="paginationState.page"
+          :page-count="Math.floor((preprintResult?.total || 0) / paginationState.pageSize) + 1"
+          :on-update:page="handlePreprintList"
+        />
+      </div>
     </div>
   </div>
 </template>

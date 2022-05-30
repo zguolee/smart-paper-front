@@ -51,6 +51,11 @@ export interface RequestParams {
   query: any
 }
 
+export interface BasicFetchResult<T> {
+  items: T[]
+  total: number
+}
+
 /**
  * @description 本函数用于从request数据中获取token，请根据项目的实际情况修改
  */
