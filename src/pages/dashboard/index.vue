@@ -44,11 +44,11 @@ const handlePreprintList = (page: number) => {
 
 <template>
   <div>
-    <div class="rounded-lg p-10 w-80%" bg="white dark:gray-700" m="t-10 auto">
-      <div m="b-2" flex="~ gap-10" justify="between" items="center">
-        <div>
+    <div class="rounded-lg p-10 w-60%" bg="white dark:gray-700" m="t-10 auto">
+      <div m="b-2" flex="~" justify="between" items="center">
+        <n-h2>
           {{ t('dashboard.preprint_list') }}
-        </div>
+        </n-h2>
         <n-radio-group v-model:value="checkStrategy">
           <n-radio-button value="all">
             {{ t('dashboard.actions.all') }}
@@ -61,7 +61,7 @@ const handlePreprintList = (page: number) => {
           </n-radio-button>
         </n-radio-group>
       </div>
-      <n-button type="primary" block dashed>
+      <n-button type="primary" block dashed @click="router.push('/dashboard/preprint')">
         <div text="xl" i="carbon-add" />
         {{ t('dashboard.actions.add_new_preprint') }}
       </n-button>

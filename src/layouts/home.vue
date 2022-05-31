@@ -1,5 +1,8 @@
 <template>
-  <main text="center gray-700 dark:gray-200">
+  <main
+    class="font-mono"
+    text="center gray-700 dark:gray-200"
+  >
     <Header />
     <RouterView />
     <Footer />
