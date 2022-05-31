@@ -32,11 +32,15 @@ export function createFakePreprintList() {
           url: 'http://www.journal1.com',
           year: '2020',
         },
+        status: ['Saved', 'First trial', 'Reception', 'Accepted', 'Rejected', 'Pay', 'Finish'][Math.floor(Math.random() * 6)],
         createTime: '2020-01-01',
         updateTime: '2020-01-02',
       }
-    })
+    },
+  )
 }
+
+const preprintList = createFakePreprintList()
 
 export default [
   {
@@ -46,9 +50,17 @@ export default [
       const token = getRequestToken(request)
       if (!token)
         return resultError('Invalid token')
-      const preprintList = createFakePreprintList()
-      const { page = 1, pageSize = 5 } = request.query as { page: number; pageSize: number }
-      return resultPageSuccess(page, pageSize, preprintList || [])
+      const { page = 1, pageSize = 5, strategy = 'all' } = request.query as { page: number; pageSize: number; strategy: 'all' | 'not_submitted' | 'submitted' }
+      const resPreprintList = preprintList.filter((preprint) => {
+        if (strategy === 'all')
+          return true
+        if (strategy === 'not_submitted')
+          return preprint.status === 'Saved'
+        if (strategy === 'submitted')
+          return preprint.status !== 'Saved'
+        return false
+      })
+      return resultPageSuccess(page, pageSize, resPreprintList || [])
     },
   },
 ] as MockMethod[]

@@ -20,12 +20,12 @@ export interface PreprintModel {
   title: string
   abstract: string
   authors: AuthorModel[]
-  journal: JournalModel[]
+  journal: JournalModel
   createTime: string
   updateTime: string
-  state?: 'First trial' | 'Reception' | 'Accepted' | 'Rejected' | 'Pay' | 'Finish'
+  status?: 'First trial' | 'Reception' | 'Accepted' | 'Rejected' | 'Pay' | 'Finish'
 }
 
-export type PreprintParams = BasicPageParams
+export type PreprintParams = BasicPageParams & { strategy: 'all' | 'not_submitted' | 'submitted' }
 
 export type GetPreprintListModel = BasicFetchResult<PreprintModel>

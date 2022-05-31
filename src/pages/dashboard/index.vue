@@ -26,10 +26,15 @@ const getPreprintList = async (
   pageSize: number,
   strategy: 'all' | 'not_submitted' | 'submitted',
 ) => {
-  const res = await getPreprintListApi({ page, pageSize })
+  const res = await getPreprintListApi({ page, pageSize, strategy })
   preprintResult.value = res
 }
 getPreprintList(paginationState.value.page, paginationState.value.pageSize, checkStrategy.value)
+
+watch(checkStrategy, (strategy) => {
+  paginationState.value.page = 1
+  getPreprintList(paginationState.value.page, paginationState.value.pageSize, strategy)
+})
 
 const handlePreprintList = (page: number) => {
   paginationState.value.page = page
@@ -62,22 +67,45 @@ const handlePreprintList = (page: number) => {
       </n-button>
       <n-list bordered>
         <n-list-item v-for="(preprint, preprintIdx) of preprintResult?.items" :key="preprintIdx">
-          <div flex="~ gap-4" justify-start items-center>
+          <div flex="~ gap-4" justify-between items-center>
             <n-thing :title="preprint.title">
               <template #avatar>
-                <n-tag type="info" class="h-full w-10" flex="~" justify="center" items-center>
-                  {{ preprintIdx + 1 }}
-                </n-tag>
+                <div class="h-full w-full" flex="~" items-center justify-center>
+                  <n-tag type="primary" class="h-10 w-10" flex="~" items-center justify-center>
+                    {{ preprintIdx + 1 }}
+                  </n-tag>
+                </div>
               </template>
               <template #description>
-                <n-ellipsis style="max-width: 300px">
+                <n-ellipsis style="max-width: 400px">
                   {{ preprint.abstract }}
                 </n-ellipsis>
               </template>
             </n-thing>
-            <div>
-              jasdhj
+            <n-thing title="Year">
+              <template #description>
+                {{ preprint.journal?.year }}
+              </template>
+            </n-thing>
+            <n-thing title="Authors">
+              <template #description>
+                <div flex="~ gap-2" items-center justify-start>
+                  <template v-for="(author) of preprint.authors" :key="author.id">
+                    <n-badge :dot="author.primary">
+                      <n-tag> {{ author.name }} </n-tag>
+                    </n-badge>
+                  </template>
+                </div>
+              </template>
+            </n-thing>
+            <div class="w-20">
+              {{ preprint.status }}
             </div>
+            <n-thing title="Update time">
+              <template #description>
+                {{ preprint.updateTime }}
+              </template>
+            </n-thing>
           </div>
         </n-list-item>
       </n-list>
