@@ -50,12 +50,12 @@ const handleLogin = (e: MouseEvent) => {
       })
       if (userInfo) {
         notification.success({
-          content: '登录成功',
-          meta: `欢迎回来: ${userInfo.realName}`,
+          content: 'Login Successful',
+          meta: `Welcome back: ${userInfo.realName}`,
         })
       }
       else {
-        message.error('账号或密码错误')
+        message.error('Incorrect username or password')
       }
     }
   })
@@ -63,7 +63,7 @@ const handleLogin = (e: MouseEvent) => {
 </script>
 
 <template>
-  <div p="t-20">
+  <div class="pt-20">
     <div text="center" p="10">
       <div class="bg-gradient-to-br from-blue-200 to-blue-500" i="carbon-campsite" text="5xl" />
       <div class="font-medium" text="xl">
@@ -71,14 +71,14 @@ const handleLogin = (e: MouseEvent) => {
       </div>
     </div>
     <n-form ref="formRef" class="m-auto w-100" :model="modelRef" :rules="rules">
-      <n-form-item path="username" label="账号">
-        <n-input v-model:value="modelRef.username" placeholder="请输入账号" @keydown.enter.prevent />
+      <n-form-item path="username" label="Account">
+        <n-input v-model:value="modelRef.username" placeholder="Please input Account" @keydown.enter.prevent />
       </n-form-item>
-      <n-form-item path="password" label="密码">
-        <n-input v-model:value="modelRef.password" type="password" placeholder="请输入密码" @keydown.enter.prevent />
+      <n-form-item path="password" label="Password">
+        <n-input v-model:value="modelRef.password" type="password" placeholder="Please input Password" @keydown.enter.prevent />
       </n-form-item>
       <n-button class="mt-10" type="primary" block @click="handleLogin">
-        登录
+        Login
       </n-button>
       <div p="t4" flex="~" justify-end>
         <n-button
@@ -86,9 +86,9 @@ const handleLogin = (e: MouseEvent) => {
           tag="a"
           target="_blank"
           type="primary"
-          @click="router.push('/sys/register')"
+          @click="router.push('/register')"
         >
-          注册
+          Register
         </n-button>
       </div>
     </n-form>

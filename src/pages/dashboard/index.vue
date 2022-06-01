@@ -47,23 +47,23 @@ const handlePreprintList = (page: number) => {
     <div class="rounded-lg p-10 w-60%" bg="white dark:gray-700" m="t-10 auto">
       <div m="b-2" flex="~" justify="between" items="center">
         <n-h2>
-          {{ t('dashboard.preprint_list') }}
+          {{ t('dashboard.index.preprint_list') }}
         </n-h2>
         <n-radio-group v-model:value="checkStrategy">
           <n-radio-button value="all">
-            {{ t('dashboard.actions.all') }}
+            {{ t('dashboard.index.actions.all') }}
           </n-radio-button>
           <n-radio-button value="not_submitted">
-            {{ t('dashboard.actions.not_submitted') }}
+            {{ t('dashboard.index.actions.not_submitted') }}
           </n-radio-button>
           <n-radio-button value="submitted">
-            {{ t('dashboard.actions.submitted') }}
+            {{ t('dashboard.index.actions.submitted') }}
           </n-radio-button>
         </n-radio-group>
       </div>
-      <n-button type="primary" block dashed @click="router.push('/dashboard/preprint')">
+      <n-button type="primary" block dashed @click="router.push('/dashboard/preprints/create')">
         <div text="xl" i="carbon-add" />
-        {{ t('dashboard.actions.add_new_preprint') }}
+        {{ t('dashboard.index.actions.create_new_preprint') }}
       </n-button>
       <n-list bordered>
         <n-list-item v-for="(preprint, preprintIdx) of preprintResult?.items" :key="preprintIdx">
@@ -77,31 +77,35 @@ const handlePreprintList = (page: number) => {
                 </div>
               </template>
               <template #description>
-                <n-ellipsis style="max-width: 400px">
+                <n-ellipsis style="max-width: 400px;min-width: 400px;">
                   {{ preprint.abstract }}
                 </n-ellipsis>
               </template>
             </n-thing>
-            <n-thing title="Year">
+            <n-thing :title="t('dashboard.index.preprint.year')">
               <template #description>
                 {{ preprint.journal?.year }}
               </template>
             </n-thing>
-            <n-thing title="Authors">
+            <n-thing :title="t('dashboard.index.preprint.authors')">
               <template #description>
                 <div flex="~ gap-2" items-center justify-start>
-                  <template v-for="(author) of preprint.authors" :key="author.id">
+                  <template v-for="author, _idx of preprint.authors" :key="_idx">
                     <n-badge :dot="author.primary">
-                      <n-tag> {{ author.name }} </n-tag>
+                      <n-tag> {{ author.firstName }} </n-tag>
                     </n-badge>
                   </template>
                 </div>
               </template>
             </n-thing>
-            <div class="w-20">
-              {{ preprint.status }}
-            </div>
-            <n-thing title="Update time">
+            <n-thing :title="t('dashboard.index.preprint.status')">
+              <template #description>
+                <div class="cursor-pointer w-20" @click="router.push(`/dashboard/preprints/${preprint.id}`)">
+                  {{ preprint.status }}
+                </div>
+              </template>
+            </n-thing>
+            <n-thing :title="t('dashboard.index.preprint.update_time')">
               <template #description>
                 {{ preprint.updateTime }}
               </template>

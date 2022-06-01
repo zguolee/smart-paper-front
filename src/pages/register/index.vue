@@ -22,16 +22,6 @@ const modelRef = ref<ModelType>({
   reenteredPassword: '123456',
 })
 
-function validatePasswordStartWith(
-  rule: FormItemRule,
-  value: string,
-): boolean {
-  return (
-    !!modelRef.value.password
-    && modelRef.value.password.startsWith(value)
-    && modelRef.value.password.length >= value.length
-  )
-}
 function validatePasswordSame(rule: FormItemRule, value: string): boolean {
   return value === modelRef.value.password
 }
@@ -40,30 +30,25 @@ const rules: FormRules = {
   username: [
     {
       required: true,
-      message: '请输入账号',
+      message: 'please input account',
     },
   ],
   password: [
     {
       required: true,
-      message: '请输入密码',
+      message: 'please input password',
     },
   ],
   reenteredPassword: [
     {
       required: true,
-      message: '请再次输入密码',
+      message: 'please input password again',
       trigger: ['input', 'blur'],
     },
     {
-      validator: validatePasswordStartWith,
-      message: '两次密码输入不一致',
-      trigger: 'input',
-    },
-    {
       validator: validatePasswordSame,
-      message: '两次密码输入不一致',
-      trigger: ['blur', 'password-input'],
+      message: 'password should be same as the password',
+      trigger: ['input', 'blur', 'password-input'],
     },
   ],
 }
@@ -87,7 +72,7 @@ const handleRegister = (e: MouseEvent) => {
 </script>
 
 <template>
-  <div p="t-20">
+  <div class="pt-20">
     <div text="center" p="10">
       <div class="bg-gradient-to-br from-blue-200 to-blue-500" i="carbon-campsite" text="5xl" />
       <div class="font-medium" text="xl">
@@ -95,23 +80,23 @@ const handleRegister = (e: MouseEvent) => {
       </div>
     </div>
     <n-form ref="formRef" class="m-auto w-100" :model="modelRef" :rules="rules">
-      <n-form-item path="username" label="账号">
-        <n-input v-model:value="modelRef.username" placeholder="请输入账号" @keydown.enter.prevent />
+      <n-form-item path="username" label="Account">
+        <n-input v-model:value="modelRef.username" placeholder="Please input account" @keydown.enter.prevent />
       </n-form-item>
-      <n-form-item path="password" label="密码">
+      <n-form-item path="password" label="Password">
         <n-input
-          v-model:value="modelRef.password" type="password" placeholder="请输入密码" @input="handlePasswordInput"
+          v-model:value="modelRef.password" type="password" placeholder="Please input Password" @input="handlePasswordInput"
           @keydown.enter.prevent
         />
       </n-form-item>
-      <n-form-item ref="rPasswordFormItemRef" first path="reenteredPassword" label="确认密码">
+      <n-form-item ref="rPasswordFormItemRef" first path="reenteredPassword" label="Confirm Password">
         <n-input
-          v-model:value="modelRef.reenteredPassword" :disabled="!modelRef.password" type="password" placeholder="请输入确认密码"
+          v-model:value="modelRef.reenteredPassword" :disabled="!modelRef.password" type="password" placeholder="Please input the confirmation password"
           @keydown.enter.prevent
         />
       </n-form-item>
       <n-button class="mt-10" type="primary" block @click="handleRegister">
-        注册
+        Register
       </n-button>
       <div p="t4" flex="~" justify-end>
         <n-button
@@ -121,7 +106,7 @@ const handleRegister = (e: MouseEvent) => {
           type="primary"
           @click="router.back()"
         >
-          已有账号
+          Existing account
         </n-button>
       </div>
     </n-form>

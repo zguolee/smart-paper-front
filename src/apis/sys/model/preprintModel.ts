@@ -2,7 +2,9 @@ import type { BasicFetchResult, BasicPageParams } from '~/apis/model/baseModel'
 
 export interface AuthorModel {
   id: string | number
-  name: string
+  firstName: string
+  lastName: string
+  email: string
   primary: boolean
 }
 
@@ -19,6 +21,7 @@ export interface PreprintModel {
   id: string | number
   title: string
   abstract: string
+  keywords: string[]
   authors: AuthorModel[]
   journal: JournalModel
   createTime: string

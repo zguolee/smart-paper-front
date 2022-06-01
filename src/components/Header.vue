@@ -36,7 +36,7 @@ const options = [
 
 <template>
   <nav
-    class="shadow text-xl p-4"
+    class="bg-white shadow text-xl p-4 dark:bg-#121212"
     dark="shadow-gray-700"
     flex="~" justify-between items-center
   >

@@ -1,23 +1,27 @@
 import type { MockMethod } from 'vite-plugin-mock'
 import type { RequestParams } from '../_util'
-import { getRequestToken, resultError, resultPageSuccess } from '../_util'
+import { getRequestToken, resultError, resultPageSuccess, resultSuccess } from '../_util'
 
 export function createFakePreprintList() {
-  return Array.from({ length: 24 },
+  return Array.from({ length: Math.floor(Math.random() * 50) + 1 },
     (_, i) => {
       return {
         id: (i + 1).toString(),
         title: 'Here is the title',
-        abstract: 'Here is the abstract. Here is the abstract. Here is the abstract. Here is the abstract. Here is the abstract.',
+        abstract: 'Here is the abstract.'.repeat(Math.floor(Math.random() * 10) + 1),
         authors: [
           {
             id: '1',
-            name: 'Author 1',
+            firstName: 'Neil',
+            lastName: 'Lee',
+            email: 'example@mail.com',
             primary: true,
           },
           {
             id: '2',
-            name: 'Author 2',
+            firstName: 'Neil',
+            lastName: 'Lee',
+            email: 'example@mail.com',
             primary: false,
           },
         ],
@@ -32,6 +36,7 @@ export function createFakePreprintList() {
           url: 'http://www.journal1.com',
           year: '2020',
         },
+        keywords: ['keyword1', 'keyword2'],
         status: ['Saved', 'First trial', 'Reception', 'Accepted', 'Rejected', 'Pay', 'Finish'][Math.floor(Math.random() * 6)],
         createTime: '2020-01-01',
         updateTime: '2020-01-02',
@@ -61,6 +66,20 @@ export default [
         return false
       })
       return resultPageSuccess(page, pageSize, resPreprintList || [])
+    },
+  },
+  {
+    url: '/api/preprints/:id',
+    method: 'get',
+    response: (request: RequestParams) => {
+      const token = getRequestToken(request)
+      if (!token)
+        return resultError('Invalid token')
+      const { id = 1 } = request.query as { id: number }
+      const resPreprintList = preprintList.filter((preprint) => {
+        return preprint.id === id.toString()
+      })
+      return resultSuccess(resPreprintList[0] || {})
     },
   },
 ] as MockMethod[]

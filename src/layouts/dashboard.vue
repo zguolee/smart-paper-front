@@ -1,5 +1,5 @@
 <template>
-  <main class="font-mono min-h-full" text="gray-700 dark:gray-200" bg="gray-100 dark:#121212">
+  <main class="min-h-full" text="gray-700 dark:gray-200" bg="gray-100 dark:#121212">
     <Header />
     <RouterView />
     <div class="opacity-25" p="5" text="center sm">

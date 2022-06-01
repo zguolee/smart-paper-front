@@ -2,16 +2,21 @@ menu:
   preprints: Preprints
 
 dashboard:
-  preprint_list: Preprint List
-  actions:
-    all: All
-    not_submitted: Not submitted 
-    submitted: Submitted
-    add_new_preprint: Add a new preprint
-  preprint:
-    year: Year
-    Author: Author
-    update_time: Update time
+  index:
+    preprint_list: Preprint List
+    actions:
+      all: All
+      not_submitted: Not submitted 
+      submitted: Submitted
+      create_new_preprint: Create a new preprint
+    preprint:
+      year: Year
+      authors: Authors
+      status: Status
+      update_time: Update time
+  preprints:
+    index:
+      create_preprint: Create Preprint
 
 
 button:
