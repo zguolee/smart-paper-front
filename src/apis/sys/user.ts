@@ -1,4 +1,4 @@
-import type { GetUserInfoModel, LoginParams, LoginResultModel } from './model/userModel'
+import type { LoginParams, LoginResultModel, UserInfoModel } from './model/userModel'
 import type { ErrorMessageMode } from '~/utils/http/types'
 import { defHttp } from '~/utils/http'
 
@@ -9,8 +9,8 @@ enum Api {
   GetUserInfo = '/users',
 }
 
-export function registerApi(params: LoginParams, mode: ErrorMessageMode = 'message') {
-  return defHttp.post(
+export const registerApi = (params: LoginParams, mode: ErrorMessageMode = 'message') =>
+  defHttp.post(
     {
       url: Api.Register,
       params,
@@ -19,10 +19,9 @@ export function registerApi(params: LoginParams, mode: ErrorMessageMode = 'messa
       errorMessageMode: mode,
     },
   )
-}
 
-export function loginApi(params: LoginParams, mode: ErrorMessageMode = 'message') {
-  return defHttp.post<LoginResultModel>(
+export const loginApi = (params: LoginParams, mode: ErrorMessageMode = 'message') =>
+  defHttp.post<LoginResultModel>(
     {
       url: Api.Login,
       params,
@@ -31,12 +30,7 @@ export function loginApi(params: LoginParams, mode: ErrorMessageMode = 'message'
       errorMessageMode: mode,
     },
   )
-}
 
-export function getUserInfoApi() {
-  return defHttp.get<GetUserInfoModel>({ url: Api.GetUserInfo })
-}
+export const getUserInfoApi = () => defHttp.get<UserInfoModel>({ url: Api.GetUserInfo })
 
-export function doLogout() {
-  return defHttp.get({ url: Api.Logout })
-}
+export const doLogout = () => defHttp.get({ url: Api.Logout })

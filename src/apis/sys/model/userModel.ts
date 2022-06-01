@@ -23,16 +23,14 @@ export interface LoginResultModel {
 /**
  * @description: Get user information return value
  */
-export interface GetUserInfoModel {
+export interface UserInfoModel {
   roles: RoleInfo[]
-  // 用户id
   userId: string | number
-  // 用户名
   username: string
-  // 真实名字
-  realName: string
-  // 介绍
-  desc?: string
-  // 头像
+  firstName: string
+  lastName: string
+  email: string
+  organization?: string
+  institute?: string
   avatar?: string
 }

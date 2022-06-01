@@ -28,13 +28,13 @@ const rules: FormRules = {
   username: [
     {
       required: true,
-      message: '请输入账号',
+      message: 'Please input username',
     },
   ],
   password: [
     {
       required: true,
-      message: '请输入密码',
+      message: 'Please input password',
     },
   ],
 }
@@ -51,7 +51,8 @@ const handleLogin = (e: MouseEvent) => {
       if (userInfo) {
         notification.success({
           content: 'Login Successful',
-          meta: `Welcome back: ${userInfo.realName}`,
+          meta: `Welcome back: ${userInfo.username}`,
+          duration: 2000,
         })
       }
       else {
@@ -71,8 +72,8 @@ const handleLogin = (e: MouseEvent) => {
       </div>
     </div>
     <n-form ref="formRef" class="m-auto w-100" :model="modelRef" :rules="rules">
-      <n-form-item path="username" label="Account">
-        <n-input v-model:value="modelRef.username" placeholder="Please input Account" @keydown.enter.prevent />
+      <n-form-item path="username" label="Username">
+        <n-input v-model:value="modelRef.username" placeholder="Please input Username" @keydown.enter.prevent />
       </n-form-item>
       <n-form-item path="password" label="Password">
         <n-input v-model:value="modelRef.password" type="password" placeholder="Please input Password" @keydown.enter.prevent />

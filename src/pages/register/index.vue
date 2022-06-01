@@ -80,8 +80,8 @@ const handleRegister = (e: MouseEvent) => {
       </div>
     </div>
     <n-form ref="formRef" class="m-auto w-100" :model="modelRef" :rules="rules">
-      <n-form-item path="username" label="Account">
-        <n-input v-model:value="modelRef.username" placeholder="Please input account" @keydown.enter.prevent />
+      <n-form-item path="username" label="Username">
+        <n-input v-model:value="modelRef.username" placeholder="Please input Username" @keydown.enter.prevent />
       </n-form-item>
       <n-form-item path="password" label="Password">
         <n-input

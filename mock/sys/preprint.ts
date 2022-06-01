@@ -76,10 +76,8 @@ export default [
       if (!token)
         return resultError('Invalid token')
       const { id = 1 } = request.query as { id: number }
-      const resPreprintList = preprintList.filter((preprint) => {
-        return preprint.id === id.toString()
-      })
-      return resultSuccess(resPreprintList[0] || {})
+      const checkPreprint = preprintList.find((preprint) => { return preprint.id === id.toString() })
+      return resultSuccess(checkPreprint)
     },
   },
 ] as MockMethod[]

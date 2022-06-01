@@ -4,7 +4,7 @@ import type { RoleEnum } from '~/enums/roleEnum'
 import { getAuthCache, setAuthCache } from '~/utils/auth'
 import { ROLES_KEY, TOKEN_KEY, USER_INFO_KEY } from '~/enums/cacheEnum'
 import { PageEnum } from '~/enums/pageEnum'
-import type { GetUserInfoModel, LoginParams } from '~/apis/sys/model/userModel'
+import type { LoginParams, UserInfoModel } from '~/apis/sys/model/userModel'
 import type { ErrorMessageMode } from '~/utils/http/types'
 import { getUserInfoApi, loginApi } from '~/apis/sys/user'
 
@@ -57,7 +57,7 @@ export const useUserStore = defineStore('user', () => {
     return userInfo
   }
 
-  const login = async (params: LoginParams & { goHome?: boolean; mode?: ErrorMessageMode }): Promise<GetUserInfoModel | null> => {
+  const login = async (params: LoginParams & { goHome?: boolean; mode?: ErrorMessageMode }): Promise<UserInfoModel | null> => {
     try {
       const { goHome = true, mode, ...loginParams } = params
       const data = await loginApi(loginParams, mode)
