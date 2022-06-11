@@ -15,8 +15,20 @@ export function createFakeUserList() {
       token: 'fakeToken1',
       roles: [
         {
-          roleName: 'Super Admin',
-          value: 'super',
+          roleName: 'Admin',
+          value: 'admin',
+        },
+        {
+          roleName: 'Author',
+          value: 'author',
+        },
+        {
+          roleName: 'Editor',
+          value: 'editor',
+        },
+        {
+          roleName: 'Reviewer',
+          value: 'reviewer',
         },
       ],
     },

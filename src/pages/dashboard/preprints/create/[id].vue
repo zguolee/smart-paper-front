@@ -1,5 +1,9 @@
 <script setup lang="ts">
 import type { FormInst, FormItemRule, FormRules } from 'naive-ui'
+import type { PreprintModel } from '~/apis/sys/model/preprintModel'
+import { getPreprintDetailApi } from '~/apis/sys/preprint'
+
+const props = defineProps<{ id: string }>()
 
 const router = useRouter()
 const { t } = useI18n()
@@ -18,6 +22,15 @@ const formValue = ref({
   keywords: [],
 })
 
+const preprintDetail = ref<PreprintModel>()
+
+const handlePreprintDetail = async (id: string) => {
+  preprintDetail.value = await getPreprintDetailApi(id)
+  Object.assign(formValue.value, preprintDetail.value)
+}
+
+handlePreprintDetail(props.id)
+
 const removeAuthorItem = (index: number) => {
   formValue.value.authors.splice(index, 1)
 }
@@ -30,7 +43,7 @@ const handleSubmit = (e: MouseEvent) => {
   e.preventDefault()
   formRef.value?.validate(async (errors) => {
     if (!errors)
-      console.error(formValue.value)
+      console.log(formValue.value)
   })
 }
 
@@ -113,11 +126,9 @@ const formRules: FormRules = {
       <n-h3>
         Keywords
       </n-h3>
-      <n-form-item
-        label="Keywords:" path="keywords"
-        :rule="{ required: true, message: 'Please input keywords', trigger: ['input', 'blur'] }"
-      >
+      <n-form-item label="Keywords:" path="keywords">
         <n-dynamic-tags v-model:value="formValue.keywords" />
+        <!-- <n-dynamic-input v-model:value="formValue.keywords" /> -->
       </n-form-item>
       <n-h3>
         Attachments

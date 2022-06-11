@@ -44,7 +44,7 @@ const handlePreprintList = (page: number) => {
 
 <template>
   <div>
-    <div class="rounded-lg p-10 w-60%" bg="white dark:gray-700" m="t-10 auto">
+    <div class="rounded-lg p-10 w-65%" bg="white dark:gray-700" m="t-10 auto">
       <div m="b-2" flex="~" justify="between" items="center">
         <n-h2>
           {{ t('dashboard.index.preprint_list') }}
@@ -66,18 +66,18 @@ const handlePreprintList = (page: number) => {
         {{ t('dashboard.index.actions.create_new_preprint') }}
       </n-button>
       <n-list bordered>
-        <n-list-item v-for="(preprint, preprintIdx) of preprintResult?.items" :key="preprintIdx">
+        <n-list-item v-for="(preprint, _preprintIdx) of preprintResult?.items" :key="_preprintIdx">
           <div flex="~ gap-4" justify-between items-center>
             <n-thing :title="preprint.title">
               <template #avatar>
                 <div class="h-full w-full" flex="~" items-center justify-center>
                   <n-tag type="primary" class="h-10 w-10" flex="~" items-center justify-center>
-                    {{ preprintIdx + 1 }}
+                    {{ _preprintIdx + 1 }}
                   </n-tag>
                 </div>
               </template>
               <template #description>
-                <n-ellipsis style="max-width: 400px;min-width: 400px;">
+                <n-ellipsis style="width: 400px;">
                   {{ preprint.abstract }}
                 </n-ellipsis>
               </template>
@@ -100,7 +100,10 @@ const handlePreprintList = (page: number) => {
             </n-thing>
             <n-thing :title="t('dashboard.index.preprint.status')">
               <template #description>
-                <div class="cursor-pointer w-20" @click="router.push(`/dashboard/preprints/${preprint.id}`)">
+                <div
+                  class="cursor-pointer w-20 underline decoration-green-500"
+                  @click="router.push(`/dashboard/preprints/${preprint.id}`)"
+                >
                   {{ preprint.status }}
                 </div>
               </template>
@@ -110,6 +113,9 @@ const handlePreprintList = (page: number) => {
                 {{ preprint.updateTime }}
               </template>
             </n-thing>
+            <NButton quaternary type="primary" @click="router.push(`/dashboard/preprints/create/${preprint.id}`)">
+              Detail
+            </NButton>
           </div>
         </n-list-item>
       </n-list>

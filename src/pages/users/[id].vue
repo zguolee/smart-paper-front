@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { FormInst, FormRules } from 'naive-ui'
+import type { FormInst } from 'naive-ui'
 import { useUserStore } from '~/stores/user'
 
 const props = defineProps<{ id: string }>()
@@ -25,13 +25,13 @@ const handleSubmit = (e: MouseEvent) => {
   e.preventDefault()
   formRef.value?.validate(async (errors) => {
     if (!errors)
-      console.error(formValue.value)
+      console.log(formValue.value)
   })
 }
 </script>
 
 <template>
-  <div class="rounded-lg p-10 w-60%" bg="white dark:gray-700" m="t-10 auto">
+  <div class="rounded-lg m-auto mt-10 text-white p-10 w-60% dark:text-gray">
     <n-h2>
       Profile
     </n-h2>
@@ -67,7 +67,7 @@ const handleSubmit = (e: MouseEvent) => {
         <n-input v-model:value="formValue.institute" placeholder="Please input Institute" />
       </n-form-item>
 
-      <div flex="~ gap-6" justify-center items-center>
+      <div class="flex gap-6 justify-center items-center">
         <n-button class="mt-10 w-50" type="primary" @click="handleSubmit">
           Save
         </n-button>
