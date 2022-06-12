@@ -56,35 +56,17 @@ handlePreprintDetail(props.id)
 
     <n-thing title="Review Process">
       <n-timeline horizontal>
-        <n-timeline-item
-          type="info"
-          title="First Trail"
-          time="2018-04-03 20:46"
-        />
-        <n-timeline-item
-          type="success"
-          title="Reception"
-          time="2018-04-03 20:46"
-        />
-        <n-timeline-item
-          type="error"
-          title="Rejected"
-          time="2018-04-03 20:46"
-        >
-          <template #default>
-            sss
-          </template>
-        </n-timeline-item>
-        <n-timeline-item
-          type="warning"
-          title="Pay"
-          time="2018-04-03 20:46"
-        />
-        <n-timeline-item
-          type="info"
-          title="Finish"
-          time="2018-04-03 20:46"
-        />
+        <template v-for="status, _idx of preprintDetail?.statusProgress" :key="_idx">
+          <n-timeline-item
+            :type="status.title === 'Rejected' ? 'error' : 'success'"
+            :title="status.title"
+            :time="status.date"
+          >
+            <template #default>
+              {{ status.comment }}
+            </template>
+          </n-timeline-item>
+        </template>
       </n-timeline>
     </n-thing>
     <div flex="~" justify-center>

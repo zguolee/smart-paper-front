@@ -21,6 +21,13 @@ const roleIcons: any = {
   editor: 'i-carbon-load-balancer-global',
   reviewer: 'i-carbon-user-admin',
 }
+
+const routerPath: any = {
+  admin: 'dashboard',
+  author: 'dashboard',
+  editor: 'assignments',
+  reviewer: 'dashboard',
+}
 </script>
 
 <template>
@@ -56,6 +63,7 @@ const roleIcons: any = {
           <div
             class="cursor-pointer transition ease-in-out duration-200" hover="text-teal-600"
             :class="roleIcons[role.value]" :title="role.label"
+            @click="router.replace(`/${routerPath[role.value]}`)"
           />
         </template>
       </div>

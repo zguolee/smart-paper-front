@@ -3,10 +3,9 @@ import { getPreprintListApi } from '~/apis/sys/preprint'
 import type { PreprintModel } from '~/apis//sys/model/preprintModel'
 
 const router = useRouter()
-
 const { t } = useI18n()
 
-const checkStrategy = ref<'all' | 'accepted' | 'rejected'>('all')
+const checkStrategy = ref<'all' | 'unfinished' | 'finished'>('all')
 
 const preprintResult = ref<{
   items: PreprintModel[]
@@ -24,7 +23,7 @@ const paginationState = ref<{
 const getPreprintList = async (
   page: number,
   pageSize: number,
-  strategy: 'all' | 'accepted' | 'rejected',
+  strategy: 'all' | 'unfinished' | 'finished',
 ) => {
   const res = await getPreprintListApi({ page, pageSize, strategy })
   preprintResult.value = res
@@ -47,24 +46,20 @@ const handlePreprintList = (page: number) => {
     <div class="rounded-lg p-10 w-65%" bg="white dark:gray-700" m="t-10 auto">
       <div m="b-2" flex="~" justify="between" items="center">
         <n-h2>
-          {{ t('dashboard.index.preprint_list') }}
+          {{ t('assignments.index.preprint_list') }}
         </n-h2>
         <n-radio-group v-model:value="checkStrategy">
           <n-radio-button value="all">
-            {{ t('dashboard.index.actions.all') }}
+            {{ t('assignments.index.actions.all') }}
           </n-radio-button>
-          <n-radio-button value="accepted">
-            {{ t('dashboard.index.actions.accepted') }}
+          <n-radio-button value="not_submitted">
+            {{ t('assignments.index.actions.unfinished') }}
           </n-radio-button>
-          <n-radio-button value="rejected">
-            {{ t('dashboard.index.actions.rejected') }}
+          <n-radio-button value="submitted">
+            {{ t('assignments.index.actions.finished') }}
           </n-radio-button>
         </n-radio-group>
       </div>
-      <n-button type="primary" block dashed @click="router.push('/dashboard/preprints/create')">
-        <div text="xl" i="carbon-add" />
-        {{ t('dashboard.index.actions.create_new_preprint') }}
-      </n-button>
       <n-list bordered>
         <n-list-item v-for="(preprint, _preprintIdx) of preprintResult?.items" :key="_preprintIdx">
           <div flex="~" justify-between items-center>
@@ -82,12 +77,12 @@ const handlePreprintList = (page: number) => {
                 </n-ellipsis>
               </template>
             </n-thing>
-            <n-thing :title="t('dashboard.index.preprint.year')">
+            <n-thing :title="t('assignments.index.preprint.year')">
               <template #description>
                 {{ preprint.journal?.year }}
               </template>
             </n-thing>
-            <n-thing w="30" :title="t('dashboard.index.preprint.authors')">
+            <n-thing w="30" :title="t('assignments.index.preprint.authors')">
               <template #description>
                 <div flex="~ gap-2" items-center justify-start>
                   <template v-for="author, _idx of preprint.authors" :key="_idx">
@@ -98,22 +93,22 @@ const handlePreprintList = (page: number) => {
                 </div>
               </template>
             </n-thing>
-            <n-thing :title="t('dashboard.index.preprint.status')">
+            <n-thing :title="t('assignments.index.preprint.status')">
               <template #description>
                 <div
                   class="cursor-pointer w-20 underline decoration-green-500"
-                  @click="router.push(`/dashboard/preprints/${preprint.id}`)"
+                  @click="router.push(`/assignments/preprints/${preprint.id}`)"
                 >
-                  {{ preprint.statusProgress?.slice(-1)[0]?.title }}
+                  {{ preprint.status }}
                 </div>
               </template>
             </n-thing>
-            <n-thing :title="t('dashboard.index.preprint.update_time')">
+            <n-thing :title="t('assignments.index.preprint.update_time')">
               <template #description>
                 {{ preprint.updateTime }}
               </template>
             </n-thing>
-            <NButton quaternary type="primary" @click="router.push(`/dashboard/preprints/create/${preprint.id}`)">
+            <NButton quaternary type="primary" @click="router.push(`/assignments/preprints/create/${preprint.id}`)">
               Detail
             </NButton>
           </div>

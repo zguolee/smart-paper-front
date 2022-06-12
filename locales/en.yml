@@ -6,8 +6,8 @@ dashboard:
     preprint_list: Preprint List
     actions:
       all: All
-      not_submitted: Not submitted
-      submitted: Submitted
+      accepted: Accepted
+      rejected: Rejected
       create_new_preprint: Create a new preprint
     preprint:
       year: Year
@@ -23,7 +23,28 @@ dashboard:
     update:
       success: Successfully updated preprint
       failure: Failed to update preprint
-      
+
+assignments:
+  index:
+    preprint_list: Preprint List
+    actions:
+      all: All
+      unfinished: Unfinished
+      finished: Finished
+    preprint:
+      year: Year
+      authors: Authors
+      status: Status
+      update_time: Update time
+  preprints:
+    index:
+      create_preprint: Create Preprint
+    create: 
+      success: Successfully created preprint
+      failure: Failed to create preprint
+    update:
+      success: Successfully updated preprint
+      failure: Failed to update preprint    
 
 button:
   about: About

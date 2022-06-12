@@ -11,24 +11,43 @@ export interface AuthorModel {
 export interface JournalModel {
   id: string | number
   name: string
-  country: string
   language: string
   url: string
   year: string
+  submitStartDate: string
+  submitEndDate: string
+  publishDate: string
+}
+
+export interface StatusModel {
+  title: 'First trial' | 'Reception' | 'Accepted' | 'Rejected' | 'Pay' | 'Finish'
+  date: string
+  comment: string
+}
+
+export interface CommentModel {
+  opinion: 'Strong Accept' | 'Accept' | 'Weak Accept' | 'Reject' | 'Weak Reject' | 'Strong Reject'
+  comment: string
+  date?: string
+  author?: AuthorModel
 }
 
 export interface PreprintModel {
-  id: string | number
+  id?: string | number
   title: string
   abstract: string
   keywords: string[]
   authors: AuthorModel[]
   journal: JournalModel
-  createTime: string
-  updateTime: string
-  status?: 'First trial' | 'Reception' | 'Accepted' | 'Rejected' | 'Pay' | 'Finish'
+  createTime?: string
+  updateTime?: string
+  status?: ''
+  statusProgress?: StatusModel[]
+  pdfUrl?: string
+  sourceUrl?: string
+  comments?: CommentModel[]
 }
 
-export type PreprintParams = BasicPageParams & { strategy: 'all' | 'not_submitted' | 'submitted' }
+export type PreprintParams = BasicPageParams & { strategy: 'all' | 'rejected' | 'accepted' | 'unfinished' | 'finished' }
 
 export type GetPreprintListModel = BasicFetchResult<PreprintModel>

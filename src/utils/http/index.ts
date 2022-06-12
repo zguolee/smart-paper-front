@@ -147,7 +147,7 @@ const transform: AxiosTransform = {
           console.error({ title: '错误提示', message: errMessage })
 
         else if (errorMessageMode === 'message')
-          createMessage.error(errMessage)
+          console.error(errMessage)
 
         return Promise.reject(error)
       }
@@ -193,7 +193,7 @@ function createAxios(options?: Partial<CreateAxiosOptions>) {
           // 接口地址
           apiUrl: '/api',
           //  是否加入时间戳
-          joinTime: true,
+          joinTime: false,
           // 忽略重复请求
           ignoreCancelToken: true,
         },
