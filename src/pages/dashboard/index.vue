@@ -98,14 +98,16 @@ const handlePreprintList = (page: number) => {
                 </div>
               </template>
             </n-thing>
-            <n-thing :title="t('dashboard.index.preprint.status')">
+            <n-thing w="20" :title="t('dashboard.index.preprint.status')">
               <template #description>
-                <div
-                  class="cursor-pointer w-20 underline decoration-green-500"
-                  @click="router.push(`/dashboard/preprints/${preprint.id}`)"
-                >
-                  {{ preprint.statusProgress?.slice(-1)[0]?.title }}
-                </div>
+                <n-tag :type="preprint.statusProgress?.some(item => item.title === 'Rejected') ? 'error' : 'success'" size="small">
+                  <div
+                    class="cursor-pointer font-black underline"
+                    @click="router.push(`/dashboard/preprints/${preprint.id}`)"
+                  >
+                    {{ preprint.statusProgress?.slice(-1)[0]?.title }}
+                  </div>
+                </n-tag>
               </template>
             </n-thing>
             <n-thing :title="t('dashboard.index.preprint.update_time')">
@@ -113,7 +115,11 @@ const handlePreprintList = (page: number) => {
                 {{ preprint.updateTime }}
               </template>
             </n-thing>
-            <NButton quaternary type="primary" @click="router.push(`/dashboard/preprints/create/${preprint.id}`)">
+            <NButton
+              type="primary" dashed
+              :disabled="!preprint.statusProgress?.some(item => item.title === 'Rejected') && !(preprint.statusProgress?.length === 1)"
+              @click="router.push(`/dashboard/preprints/create/${preprint.id}`)"
+            >
               Detail
             </NButton>
           </div>
