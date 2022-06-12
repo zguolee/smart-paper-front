@@ -164,7 +164,7 @@ const formRules: FormRules = {
           </n-upload-dragger>
         </n-upload>
       </div>
-      <div flex="~ gap-6" justify-center items-center>
+      <div class="mx-auto w-60%" flex="~ gap-6" justify-center items-center>
         <NButton class="flex-1 mt-10" type="primary" @click="handleSubmit">
           Submit
         </NButton>

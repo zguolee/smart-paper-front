@@ -31,13 +31,13 @@ const handleSubmit = (e: MouseEvent) => {
 </script>
 
 <template>
-  <div class="rounded-lg m-auto mt-10 text-white p-10 w-60% dark:text-gray">
+  <div class="rounded-lg p-10 w-60%" bg="white dark:gray-700" m="t-10 auto">
     <n-h2>
       Profile
     </n-h2>
     <n-form ref="formRef" :model="formValue">
       <n-form-item
-        label="Username(Username)" path="username"
+        label="Username(Email)" path="username"
         :rule="{ required: true, message: 'Please input email', trigger: ['input', 'blur'] }"
       >
         <n-input v-model:value="formValue.username" placeholder="Please input Username" />
@@ -67,11 +67,11 @@ const handleSubmit = (e: MouseEvent) => {
         <n-input v-model:value="formValue.institute" placeholder="Please input Institute" />
       </n-form-item>
 
-      <div class="flex gap-6 justify-center items-center">
-        <n-button class="mt-10 w-50" type="primary" @click="handleSubmit">
+      <div class="mx-auto w-40%" flex="~ gap-6" justify-center items-center>
+        <n-button class="flex-1 mt-10" type="primary" @click="handleSubmit">
           Save
         </n-button>
-        <n-button class="mt-10 w-50" @click="router.back()">
+        <n-button class="flex-1 mt-10" @click="router.back()">
           Back
         </n-button>
       </div>
