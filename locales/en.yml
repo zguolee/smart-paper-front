@@ -6,7 +6,7 @@ dashboard:
     preprint_list: Preprint List
     actions:
       all: All
-      not_submitted: Not submitted 
+      not_submitted: Not submitted
       submitted: Submitted
       create_new_preprint: Create a new preprint
     preprint:
@@ -17,7 +17,13 @@ dashboard:
   preprints:
     index:
       create_preprint: Create Preprint
-
+    create: 
+      success: Successfully created preprint
+      failure: Failed to create preprint
+    update:
+      success: Successfully updated preprint
+      failure: Failed to update preprint
+      
 
 button:
   about: About

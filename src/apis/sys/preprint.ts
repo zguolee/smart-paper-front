@@ -12,3 +12,6 @@ export const getPreprintListApi = (params: PreprintParams) => defHttp.get<GetPre
 
 export const getPreprintDetailApi = (id: string) => defHttp.get<PreprintModel>({ url: `${Api.Preprints}/${id}` })
 
+export const createPreprintApi = (params: any) => defHttp.post<PreprintModel>({ url: Api.Preprints, params })
+
+export const updatePreprintApi = (id: string, params: any) => defHttp.put<PreprintModel>({ url: `${Api.Preprints}/${id}`, params }, { errorMessageMode: 'message' })

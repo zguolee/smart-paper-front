@@ -1,6 +1,7 @@
 import type { MockMethod } from 'vite-plugin-mock'
 import type { RequestParams } from '../_util'
 import { getRequestToken, resultError, resultPageSuccess, resultSuccess } from '../_util'
+import type { PreprintModel } from '~/apis/sys/model/preprintModel'
 
 export function createFakePreprintList() {
   return Array.from({ length: Math.floor(Math.random() * 50) + 1 },
@@ -78,6 +79,36 @@ export default [
       const { id = 1 } = request.query as { id: number }
       const checkPreprint = preprintList.find((preprint) => { return preprint.id === id.toString() })
       return resultSuccess(checkPreprint)
+    },
+  },
+  {
+    url: '/api/preprints',
+    method: 'post',
+    response: (request: RequestParams) => {
+      const token = getRequestToken(request)
+      if (!token)
+        return resultError('Invalid token')
+      const { body } = request
+      const preprint = body as PreprintModel
+      preprint.id = (preprintList.length + 1).toString()
+      preprintList.push(preprint as any)
+      return resultSuccess(preprint)
+    },
+  },
+  {
+    url: '/api/preprints/:id',
+    method: 'put',
+    response: (request: RequestParams) => {
+      const token = getRequestToken(request)
+      if (!token)
+        return resultError('Invalid token')
+      const { id = 1 } = request.query as { id: number }
+      const preprint = preprintList.find((preprint) => { return preprint.id === id.toString() })
+      if (!preprint)
+        return resultError('Preprint not found')
+      const { body } = request
+      Object.assign(preprint, body)
+      return resultSuccess(preprint)
     },
   },
 ] as MockMethod[]
