@@ -52,10 +52,10 @@ const handlePreprintList = (page: number) => {
           <n-radio-button value="all">
             {{ t('assignments.index.actions.all') }}
           </n-radio-button>
-          <n-radio-button value="not_submitted">
+          <n-radio-button value="unfinished">
             {{ t('assignments.index.actions.unfinished') }}
           </n-radio-button>
-          <n-radio-button value="submitted">
+          <n-radio-button value="finished">
             {{ t('assignments.index.actions.finished') }}
           </n-radio-button>
         </n-radio-group>
@@ -99,7 +99,7 @@ const handlePreprintList = (page: number) => {
                   class="cursor-pointer w-20 underline decoration-green-500"
                   @click="router.push(`/assignments/preprints/${preprint.id}`)"
                 >
-                  {{ preprint.status }}
+                  {{ preprint.statusProgress?.slice(-1)[0]?.title }}
                 </div>
               </template>
             </n-thing>

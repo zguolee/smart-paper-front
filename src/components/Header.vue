@@ -42,7 +42,7 @@ const routerPath: any = {
           {{ VITE_APP_TITLE }}
         </div>
       </div>
-      <n-button class="text-xl" text tag="a" target="_blank" type="primary" @click="router.push('/dashboard')">
+      <n-button class="text-xl" text tag="a" target="_blank" type="primary">
         {{ t('menu.preprints') }}
       </n-button>
     </div>

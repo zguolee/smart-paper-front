@@ -3,6 +3,22 @@ import type { RequestParams } from '../_util'
 import { getRequestToken, resultError, resultPageSuccess, resultSuccess } from '../_util'
 import type { AuthorModel, JournalModel, PreprintModel, PreprintParams, StatusModel } from '~/apis/sys/model/preprintModel'
 
+const createStatusProgress = (): StatusModel[] => {
+  const firstStatus: StatusModel = { title: 'First trial', date: '2020-01-01', comment: '' }
+  const receptionStatus: StatusModel = { title: 'Reception', date: '2020-01-02', comment: '' }
+  const acceptedStatus: StatusModel = { title: 'Accepted', date: '2020-01-03', comment: 'Check email for more information.' }
+  const rejectedStatus: StatusModel = { title: 'Rejected', date: '2020-01-03', comment: 'Check email for more information.' }
+  const payStatus: StatusModel = { title: 'Pay', date: '2020-01-04', comment: 'You have paid.' }
+  const finishStatus: StatusModel = { title: 'Finish', date: '2020-01-05', comment: '' }
+
+  return [[firstStatus],
+    [firstStatus, receptionStatus],
+    [firstStatus, receptionStatus, acceptedStatus],
+    [firstStatus, receptionStatus, rejectedStatus],
+    [firstStatus, receptionStatus, acceptedStatus, payStatus],
+    [firstStatus, receptionStatus, acceptedStatus, payStatus, finishStatus]][Math.floor(Math.random() * 6)]
+}
+
 export function createFakePreprintList() {
   return Array.from({ length: Math.floor(Math.random() * 50) + 1 },
     (_, i) => {
@@ -33,24 +49,7 @@ export function createFakePreprintList() {
           year: '2020',
         } as JournalModel,
         keywords: ['keyword1', 'keyword2'],
-        statusProgress: [{
-          title: 'First trial',
-          date: '2020-01-01',
-          comment: '',
-        }, {
-          title: 'Reception',
-          date: '2020-01-02',
-          comment: '',
-        }, [{
-          title: 'Accepted',
-          date: '2020-01-03',
-          comment: '',
-        }, {
-          title: 'Rejected',
-          date: '2020-01-04',
-          comment: '',
-        }][Math.floor(Math.random() * 2)],
-        ] as StatusModel[],
+        statusProgress: createStatusProgress(),
         createTime: ['2020-01-05', '2020-01-06'][Math.floor(Math.random() * 2)],
         updateTime: ['2020-01-05', '2020-01-06'][Math.floor(Math.random() * 2)],
       } as unknown as PreprintModel
@@ -72,6 +71,10 @@ export default [
       const resPreprintList = preprintList.filter((preprint) => {
         if (strategy === 'all')
           return true
+        if (strategy === 'unfinished')
+          return (preprint.statusProgress?.length || 3) <= 2
+        if (strategy === 'finished')
+          return (preprint.statusProgress?.length || 0) > 2
         return preprint.statusProgress?.some(status => status.title.toLowerCase() === strategy.toLowerCase())
       })
       return resultPageSuccess(page, pageSize, resPreprintList || [])
