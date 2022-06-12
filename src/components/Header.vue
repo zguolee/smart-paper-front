@@ -26,7 +26,7 @@ const routerPath: any = {
   admin: 'dashboard',
   author: 'dashboard',
   editor: 'assignments',
-  reviewer: 'dashboard',
+  reviewer: 'review',
 }
 </script>
 
@@ -49,7 +49,7 @@ const routerPath: any = {
     <div flex="~ gap-2" justify-center items-center>
       <div
         class="cursor-pointer justify-center items-center" flex="~ gap-2"
-        @click="router.push(`/users/${userInfo.userId}`)"
+        @click="router.push(`/users/${userInfo.id}`)"
       >
         <n-avatar round size="small" :src="userInfo.avatar" />
         <div hover="text-teal-600">

@@ -1,7 +1,7 @@
 import type { RoleInfo } from '~/api/sys/model/userModel'
 
 export interface UserInfo {
-  userId: string | number
+  id: string | number
   username: string
   firstName: string
   lastName: string

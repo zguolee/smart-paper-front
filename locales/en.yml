@@ -17,7 +17,7 @@ dashboard:
   preprints:
     index:
       create_preprint: Create Preprint
-    create: 
+    create:
       success: Successfully created preprint
       failure: Failed to create preprint
     update:
@@ -33,18 +33,40 @@ assignments:
       finished: Finished
     preprint:
       year: Year
-      authors: Authors
+      reviewers: Reviewers
       status: Status
       update_time: Update time
   preprints:
     index:
       create_preprint: Create Preprint
-    create: 
+    create:
       success: Successfully created preprint
       failure: Failed to create preprint
     update:
       success: Successfully updated preprint
-      failure: Failed to update preprint    
+      failure: Failed to update preprint
+
+review:
+  index:
+    preprint_list: Preprint List
+    actions:
+      all: All
+      unreviewed: Unreviewed
+      reviewed: Reviewed
+    preprint:
+      year: Year
+      reviewers: Reviewers
+      status: Status
+      update_time: Update time
+  preprints:
+    index:
+      create_preprint: Create Preprint
+    create:
+      success: Successfully created preprint
+      failure: Failed to create preprint
+    update:
+      success: Successfully updated preprint
+      failure: Failed to update preprint
 
 button:
   about: About

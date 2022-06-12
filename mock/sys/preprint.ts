@@ -1,7 +1,9 @@
 import type { MockMethod } from 'vite-plugin-mock'
 import type { RequestParams } from '../_util'
 import { getRequestToken, resultError, resultPageSuccess, resultSuccess } from '../_util'
+import { createFakeUserList } from './user'
 import type { AuthorModel, JournalModel, PreprintModel, PreprintParams, StatusModel } from '~/apis/sys/model/preprintModel'
+import type { UserInfoModel } from '~/apis/sys/model/userModel'
 
 const createStatusProgress = (): StatusModel[] => {
   const firstStatus: StatusModel = { title: 'First trial', date: '2020-01-01', comment: '' }
@@ -20,7 +22,7 @@ const createStatusProgress = (): StatusModel[] => {
 }
 
 export function createFakePreprintList() {
-  return Array.from({ length: Math.floor(Math.random() * 50) + 1 },
+  return Array.from({ length: Math.floor(Math.random() * 50) + 20 },
     (_, i) => {
       return {
         id: (i + 1).toString(),
@@ -52,6 +54,29 @@ export function createFakePreprintList() {
         statusProgress: createStatusProgress(),
         createTime: ['2020-01-05', '2020-01-06'][Math.floor(Math.random() * 2)],
         updateTime: ['2020-01-05', '2020-01-06'][Math.floor(Math.random() * 2)],
+        reviewers: Array.from(
+          { length: Math.floor(Math.random() * 3) },
+          (_, i) => {
+            return {
+              id: '1',
+              firstName: `Neil${i + 1}`,
+              lastName: 'Lee',
+              email: 'example@mail.com',
+            }
+          }),
+        comments: [
+          {
+            opinion: 'Strong Accept',
+            comment: 'Here is the comment.'.repeat(Math.floor(Math.random() * 10) + 1),
+            date: '2020-01-05',
+            reviewer: {
+              id: ['1', '2', '3'][Math.floor(Math.random() * 2)],
+              firstName: 'Neil',
+              lastName: 'Lee',
+              email: '',
+            },
+          },
+        ],
       } as unknown as PreprintModel
     },
   )
@@ -71,10 +96,23 @@ export default [
       const resPreprintList = preprintList.filter((preprint) => {
         if (strategy === 'all')
           return true
+
         if (strategy === 'unfinished')
           return (preprint.statusProgress?.length || 3) <= 2
+
         if (strategy === 'finished')
           return (preprint.statusProgress?.length || 0) > 2
+
+        if (strategy === 'reviewed') {
+          const checkUser = createFakeUserList().find(item => item.token === token) as unknown as UserInfoModel
+          return preprint.comments?.some(comment => comment.reviewer.id.toString() === checkUser.id)
+        }
+
+        if (strategy === 'unreviewed') {
+          const checkUser = createFakeUserList().find(item => item.token === token) as unknown as UserInfoModel
+          return !preprint.comments?.some(comment => comment.reviewer.id.toString() === checkUser.id)
+        }
+
         return preprint.statusProgress?.some(status => status.title.toLowerCase() === strategy.toLowerCase())
       })
       return resultPageSuccess(page, pageSize, resPreprintList || [])

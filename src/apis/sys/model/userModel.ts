@@ -15,7 +15,7 @@ export interface RoleInfo {
  * @description: Login interface return value
  */
 export interface LoginResultModel {
-  userId: string | number
+  id: string | number
   token: string
   role: RoleInfo
 }
@@ -25,7 +25,7 @@ export interface LoginResultModel {
  */
 export interface UserInfoModel {
   roles: RoleInfo[]
-  userId: string | number
+  id: string | number
   username: string
   firstName: string
   lastName: string

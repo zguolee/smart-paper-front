@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { getPreprintListApi } from '~/apis/sys/preprint'
 import type { PreprintModel } from '~/apis//sys/model/preprintModel'
+import { useUserStore } from '~/stores/user'
 
-const router = useRouter()
 const { t } = useI18n()
+const router = useRouter()
+const userStore = useUserStore()
 
-const checkStrategy = ref<'all' | 'unfinished' | 'finished'>('all')
+const checkStrategy = ref<'all' | 'unreviewed' | 'reviewed'>('all')
 
 const preprintResult = ref<{
   items: PreprintModel[]
@@ -23,7 +25,7 @@ const paginationState = ref<{
 const getPreprintList = async (
   page: number,
   pageSize: number,
-  strategy: 'all' | 'unfinished' | 'finished',
+  strategy: 'all' | 'unreviewed' | 'reviewed',
 ) => {
   const res = await getPreprintListApi({ page, pageSize, strategy })
   preprintResult.value = res
@@ -39,6 +41,12 @@ const handlePreprintList = (page: number) => {
   paginationState.value.page = page
   getPreprintList(paginationState.value.page, paginationState.value.pageSize, checkStrategy.value)
 }
+
+const checkReviewed = (item: PreprintModel) => {
+  console.log(JSON.stringify(item.comments))
+  console.log(userStore.getUserInfo())
+  return item.comments?.some(comment => comment.reviewer.id.toString() === userStore.getUserInfo().id)
+}
 </script>
 
 <template>
@@ -46,17 +54,17 @@ const handlePreprintList = (page: number) => {
     <div class="rounded-lg p-10 w-65%" bg="white dark:gray-700" m="t-10 auto">
       <div m="b-2" flex="~" justify="between" items="center">
         <n-h2>
-          {{ t('assignments.index.preprint_list') }}
+          {{ t('review.index.preprint_list') }}
         </n-h2>
         <n-radio-group v-model:value="checkStrategy">
           <n-radio-button value="all">
-            {{ t('assignments.index.actions.all') }}
+            {{ t('review.index.actions.all') }}
           </n-radio-button>
-          <n-radio-button value="unfinished">
-            {{ t('assignments.index.actions.unfinished') }}
+          <n-radio-button value="unreviewed">
+            {{ t('review.index.actions.unreviewed') }}
           </n-radio-button>
-          <n-radio-button value="finished">
-            {{ t('assignments.index.actions.finished') }}
+          <n-radio-button value="reviewed">
+            {{ t('review.index.actions.reviewed') }}
           </n-radio-button>
         </n-radio-group>
       </div>
@@ -77,12 +85,12 @@ const handlePreprintList = (page: number) => {
                 </n-ellipsis>
               </template>
             </n-thing>
-            <n-thing :title="t('assignments.index.preprint.year')">
+            <n-thing :title="t('review.index.preprint.year')">
               <template #description>
                 {{ preprint.journal?.year }}
               </template>
             </n-thing>
-            <n-thing w="30" :title="t('assignments.index.preprint.reviewers')">
+            <n-thing w="30" :title="t('review.index.preprint.reviewers')">
               <template #description>
                 <div flex="~ gap-2" items-center justify-start>
                   <template v-for="reviewer, _idx of preprint.reviewers" :key="_idx">
@@ -92,27 +100,27 @@ const handlePreprintList = (page: number) => {
                 </div>
               </template>
             </n-thing>
-            <n-thing w="20" :title="t('assignments.index.preprint.status')">
+            <n-thing w="20" :title="t('review.index.preprint.status')">
               <template #description>
                 <n-tag
-                  :type="preprint.statusProgress?.some(item => item.title === 'Rejected') ? 'error' : 'success'"
+                  :type="checkReviewed(preprint) ? 'success' : 'error'"
                   size="small"
                 >
                   <div
                     class="cursor-pointer font-black underline"
-                    @click="router.push(`/assignments/preprints/${preprint.id}`)"
+                    @click="router.push(`/review/preprints/${preprint.id}`)"
                   >
-                    {{ preprint.statusProgress?.slice(-1)[0]?.title }}
+                    {{ checkReviewed(preprint) ? 'Reviewed' : 'Unreviewed' }}
                   </div>
                 </n-tag>
               </template>
             </n-thing>
-            <n-thing :title="t('assignments.index.preprint.update_time')">
+            <n-thing :title="t('review.index.preprint.update_time')">
               <template #description>
                 {{ preprint.updateTime }}
               </template>
             </n-thing>
-            <NButton type="primary" dashed @click="router.push(`/assignments/${preprint.id}`)">
+            <NButton type="primary" dashed @click="router.push(`/review/${preprint.id}`)">
               Detail
             </NButton>
           </div>
