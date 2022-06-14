@@ -6,8 +6,8 @@ import { getPreprintDetailApi, updatePreprintApi } from '~/apis/sys/preprint'
 
 const props = defineProps<{ id: string }>()
 
-const message = useMessage()
 const router = useRouter()
+const message = useMessage()
 const { t } = useI18n()
 
 const formRef = ref<FormInst | null>(null)

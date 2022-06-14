@@ -1,57 +1,49 @@
 <script setup lang="ts">
 import type { FormInst } from 'naive-ui'
+import { useMessage } from 'naive-ui'
 import type { PreprintModel } from '~/apis/sys/model/preprintModel'
-import { getPreprintDetailApi } from '~/apis/sys/preprint'
+import { getPreprintDetailApi, reviewPreprintApi } from '~/apis/sys/preprint'
 
 const props = defineProps<{ id: string }>()
 
 const router = useRouter()
-
-const reviewerOptions = ref<{
-  label: string
-  value: string
-}[]>([
-  { label: 'Neil1', value: '1' },
-  { label: 'Neil2', value: '2' },
-  { label: 'Neil3', value: '3' },
-])
+const message = useMessage()
+const { t } = useI18n()
 
 const formRef = ref<FormInst | null>(null)
 const formValue = ref({
-  reviewers: [],
-  reviewers2: [
-    { reviewer: null },
-  ],
+  opinion: '',
+  comment: '',
 })
+
+const opinionOptions = ['Strong Accept', 'Accept', 'Weak Accept', 'Reject', 'Weak Reject', 'Strong Reject']
+  .map(item => ({
+    label: item,
+    value: item,
+  }))
 
 const preprintDetail = ref<PreprintModel>()
 const handlePreprintDetail = async (id: string) => {
   preprintDetail.value = await getPreprintDetailApi(id)
-  // if (preprintDetail.value?.reviewers && preprintDetail.value.reviewers.length > 0) {
-  //   formValue.value.reviewers = preprintDetail.value.reviewers.map(item => ({
-  //     reviewer: item.reviewer,
-  //   }))
-  // }
+  Object.assign(formValue.value, preprintDetail.value.comments.find(item => item.reviewer.id === id.toString()))
 }
 handlePreprintDetail(props.id)
-
-const removeReviewerItem = (index: number) => formValue.value.reviewers.splice(index, 1)
-
-const addReviewerItem = () => formValue.value.reviewers.push({ reviewer: null })
-
-const handleSearch = (query: string) => {
-  console.log(query)
-}
 
 const handleSubmit = (e: MouseEvent) => {
   e.preventDefault()
   formRef.value?.validate(async (errors) => {
-    if (!errors)
-      console.log(formValue.value)
+    if (!errors) {
+      const res = await reviewPreprintApi(props.id, formValue.value as any)
+      if (res.id) {
+        message.success(t('dashboard.preprints.update.success'))
+        router.replace('/review')
+      }
+      else {
+        message.error(t('dashboard.preprints.update.failure'))
+      }
+    }
   })
 }
-
-const selectValue = ref<string | null>(null)
 </script>
 
 <template>
@@ -112,63 +104,23 @@ const selectValue = ref<string | null>(null)
 
     <n-form ref="formRef" :model="formValue" label-placement="top">
       <n-h3 class="m-0">
-        Reviewers information
+        Comment
       </n-h3>
-      <n-form-item label="Reviewers" path="keywords">
-        <n-dynamic-tags v-model:value="formValue.reviewers" type="success">
-          <template #input="{ submit, deactivate }">
-            <n-auto-complete
-              ref="autoCompleteInstRef"
-              v-model:value="selectValue"
-              size="small"
-              :options="reviewerOptions"
-              placeholder="邮箱"
-              :clear-after-select="true"
-              @select="submit($event)"
-              @blur="deactivate"
-            />
-            <!-- <n-select
-              v-model:value="selectValue"
-              filterable placeholder="Please select reviewer"
-              :options="reviewerOptions" clearable remote on-update:value="submit($event)"
-              @search="handleSearch"
-              @blur="deactivate"
-            /> -->
-          </template>
-          <template #trigger="{ activate, disabled }">
-            <n-button
-              size="small"
-              type="primary"
-              dashed
-              :disabled="disabled"
-              @click="activate()"
-            >
-              <div i="carbon-add" m="r2" />
-              添加
-            </n-button>
-          </template>
-        </n-dynamic-tags>
+      <n-form-item label="Opinion" path="selectValue">
+        <n-select
+          v-model:value="formValue.opinion"
+          placeholder="Select"
+          :options="opinionOptions"
+        />
       </n-form-item>
-      <template v-for="(reviewer, _reviewerIdx) of formValue.reviewers" :key="_reviewerIdx">
-        <div flex="~ gap-4" justify-start items-center>
-          <n-tag type="primary" class="h-10 w-10" flex="~" items-center justify-center>
-            {{ _reviewerIdx + 1 }}
-          </n-tag>
-          <NFormItem class="flex-1">
-            <n-select
-              v-model:value="reviewer.reviewer" filterable placeholder="Please select reviewer"
-              :options="reviewerOptions" clearable remote @search="handleSearch"
-            />
-          </NFormItem>
-          <NButton secondary type="error" @click="removeReviewerItem(_reviewerIdx)">
-            Delete
-          </NButton>
-        </div>
-      </template>
-      <n-button type="primary" block dashed @click="addReviewerItem">
-        <div text="xl" i="carbon-add" />
-        Click here to add more reviewer
-      </n-button>
+      <n-form-item label="Comment" path="textareaValue">
+        <n-input
+          v-model:value="formValue.comment"
+          placeholder="Please enter your comment"
+          type="textarea"
+          :autosize="{ minRows: 3, maxRows: 5 }"
+        />
+      </n-form-item>
       <div class="mx-auto w-40%" flex="~ gap-6" justify-center items-center>
         <n-button class="flex-1 mt-10" type="primary" @click="handleSubmit">
           Save

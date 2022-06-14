@@ -160,4 +160,31 @@ export default [
       return resultSuccess(preprint)
     },
   },
+  {
+    url: '/api/preprints/:id/review',
+    method: 'post',
+    response: (request: RequestParams) => {
+      const token = getRequestToken(request)
+      if (!token)
+        return resultError('Invalid token')
+      const { id = 1 } = request.query as { id: number }
+      const preprint = preprintList.find((preprint) => { return preprint.id === id.toString() })
+      if (!preprint)
+        return resultError('Preprint not found')
+      const { body } = request
+      const { opinion, comment } = body as { opinion: any; comment: string }
+      preprint.comments.push({
+        opinion,
+        comment,
+        date: new Date().toISOString(),
+        reviewer: {
+          id: createFakeUserList().find(item => item.token === token)?.id as string,
+          firstName: 'Neil',
+          lastName: 'Lee',
+          email: '',
+        } as any,
+      })
+      return resultSuccess(preprint)
+    },
+  },
 ] as MockMethod[]

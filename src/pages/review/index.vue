@@ -43,8 +43,6 @@ const handlePreprintList = (page: number) => {
 }
 
 const checkReviewed = (item: PreprintModel) => {
-  console.log(JSON.stringify(item.comments))
-  console.log(userStore.getUserInfo())
   return item.comments?.some(comment => comment.reviewer.id.toString() === userStore.getUserInfo().id)
 }
 </script>
@@ -88,16 +86,6 @@ const checkReviewed = (item: PreprintModel) => {
             <n-thing :title="t('review.index.preprint.year')">
               <template #description>
                 {{ preprint.journal?.year }}
-              </template>
-            </n-thing>
-            <n-thing w="30" :title="t('review.index.preprint.reviewers')">
-              <template #description>
-                <div flex="~ gap-2" items-center justify-start>
-                  <template v-for="reviewer, _idx of preprint.reviewers" :key="_idx">
-                    <n-tag> {{ reviewer.firstName }} </n-tag>
-                  </template>
-                  {{ !preprint.reviewers?.length ? 'Allocate Wait' : ' ' }}
-                </div>
               </template>
             </n-thing>
             <n-thing w="20" :title="t('review.index.preprint.status')">

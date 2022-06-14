@@ -44,10 +44,10 @@ export interface PreprintModel {
   updateTime?: string
   status?: ''
   statusProgress?: StatusModel[]
-  pdfUrl?: string
+  pdfUrl: string
   sourceUrl?: string
-  comments?: CommentModel[]
-  reviewers?: AuthorModel[]
+  comments: CommentModel[]
+  reviewers: AuthorModel[]
 }
 
 export interface StrategyParams {
