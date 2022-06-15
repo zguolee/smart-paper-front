@@ -52,11 +52,7 @@ export function createFakeUserList() {
   ]
 }
 
-const fakeCodeList: any = {
-  1: ['1000', '3000', '5000'],
-
-  2: ['2000', '4000', '6000'],
-}
+export const fakeUserList = createFakeUserList() as any[]
 
 export default [
   {
@@ -65,13 +61,14 @@ export default [
     method: 'post',
     response: ({ body }: { body: { username: string; password: string } }) => {
       const { username } = body
-      const checkUser = createFakeUserList().find(
-        item => item.username === username,
-      )
+      const checkUser = fakeUserList.find(item => item.username === username)
       if (!checkUser) {
-        return resultSuccess({
+        fakeUserList.push({
+          id: `${fakeUserList.length + 1}`,
           username,
+          password: body.password,
         })
+        return resultSuccess(fakeUserList[fakeUserList.length - 1])
       }
 
       return resultError('User already exists!')
@@ -83,7 +80,7 @@ export default [
     method: 'post',
     response: ({ body }: { body: { username: string; password: string } }) => {
       const { username, password } = body
-      const checkUser = createFakeUserList().find(
+      const checkUser = fakeUserList.find(
         item => item.username === username && password === item.password,
       )
       if (!checkUser)
@@ -107,28 +104,11 @@ export default [
       const token = getRequestToken(request)
       if (!token)
         return resultError('Invalid token')
-      const checkUser = createFakeUserList().find(item => item.token === token)
+      const checkUser = fakeUserList.find(item => item.token === token)
       if (!checkUser)
         return resultError('The corresponding user information was not obtained!')
 
       return resultSuccess(checkUser)
-    },
-  },
-  {
-    url: '/api/getPermCode',
-    timeout: 200,
-    method: 'get',
-    response: (request: RequestParams) => {
-      const token = getRequestToken(request)
-      if (!token)
-        return resultError('Invalid token')
-      const checkUser = createFakeUserList().find(item => item.token === token)
-      if (!checkUser)
-        return resultError('Invalid token!')
-
-      const codeList = fakeCodeList[checkUser.id]
-
-      return resultSuccess(codeList)
     },
   },
   {
@@ -139,7 +119,7 @@ export default [
       const token = getRequestToken(request)
       if (!token)
         return resultError('Invalid token')
-      const checkUser = createFakeUserList().find(item => item.token === token)
+      const checkUser = fakeUserList.find(item => item.token === token)
       if (!checkUser)
         return resultError('Invalid token!')
 

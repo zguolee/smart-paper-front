@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import type { FormInst, FormItemInst, FormItemRule, FormRules } from 'naive-ui'
+import { useMessage } from 'naive-ui'
 import { getAppEnvConfig } from '~/utils/env'
 import { registerApi } from '~/apis/sys/user'
 
 const router = useRouter()
+const message = useMessage()
 
 interface ModelType {
   username: string
@@ -62,10 +64,14 @@ const handleRegister = (e: MouseEvent) => {
   e.preventDefault()
   formRef.value?.validate(async (errors) => {
     if (!errors) {
-      await registerApi({
+      const userInfo = await registerApi({
         username: modelRef.value.username,
         password: modelRef.value.password,
       }, 'message')
+      if (userInfo.id) {
+        message.success('register success')
+        router.replace('/login')
+      }
     }
   })
 }

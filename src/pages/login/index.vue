@@ -4,9 +4,10 @@ import { useMessage, useNotification } from 'naive-ui'
 import { getAppEnvConfig } from '~/utils/env'
 import { useUserStore } from '~/stores/user'
 
-const userStore = useUserStore()
-
 const router = useRouter()
+const userStore = useUserStore()
+const message = useMessage()
+const notification = useNotification()
 
 interface ModelType {
   username: string
@@ -16,8 +17,6 @@ interface ModelType {
 const { VITE_APP_TITLE } = getAppEnvConfig()
 
 const formRef = ref<FormInst | null>(null)
-const message = useMessage()
-const notification = useNotification()
 
 const modelRef = ref<ModelType>({
   username: 'admin@mail.com',

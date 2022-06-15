@@ -1,7 +1,7 @@
 import type { MockMethod } from 'vite-plugin-mock'
 import type { RequestParams } from '../_util'
 import { getRequestToken, resultError, resultPageSuccess, resultSuccess } from '../_util'
-import { createFakeUserList } from './user'
+import { fakeUserList } from './user'
 import type { AuthorModel, JournalModel, PreprintModel, PreprintParams, StatusModel } from '~/apis/sys/model/preprintModel'
 import type { UserInfoModel } from '~/apis/sys/model/userModel'
 
@@ -104,12 +104,12 @@ export default [
           return (preprint.statusProgress?.length || 0) > 2
 
         if (strategy === 'reviewed') {
-          const checkUser = createFakeUserList().find(item => item.token === token) as unknown as UserInfoModel
+          const checkUser = fakeUserList.find(item => item.token === token) as unknown as UserInfoModel
           return preprint.comments?.some(comment => comment.reviewer.id.toString() === checkUser.id)
         }
 
         if (strategy === 'unreviewed') {
-          const checkUser = createFakeUserList().find(item => item.token === token) as unknown as UserInfoModel
+          const checkUser = fakeUserList.find(item => item.token === token) as unknown as UserInfoModel
           return !preprint.comments?.some(comment => comment.reviewer.id.toString() === checkUser.id)
         }
 
@@ -178,7 +178,7 @@ export default [
         comment,
         date: new Date().toISOString(),
         reviewer: {
-          id: createFakeUserList().find(item => item.token === token)?.id as string,
+          id: fakeUserList.find(item => item.token === token)?.id as string,
           firstName: 'Neil',
           lastName: 'Lee',
           email: '',

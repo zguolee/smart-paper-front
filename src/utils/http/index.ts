@@ -58,7 +58,7 @@ const transform: AxiosTransform = {
       console.error({ title: '错误提示', message: timeoutMsg })
 
     else if (options.errorMessageMode === 'message')
-      console.error(timeoutMsg)
+      window.$message.error(timeoutMsg)
 
     // throw new Error(timeoutMsg || 'The interface request failed, please try again later!')
     return timeoutMsg
@@ -147,7 +147,7 @@ const transform: AxiosTransform = {
           console.error({ title: '错误提示', message: errMessage })
 
         else if (errorMessageMode === 'message')
-          console.error(errMessage)
+          window.$message.error(errMessage)
 
         return Promise.reject(error)
       }
