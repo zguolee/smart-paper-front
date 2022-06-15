@@ -49,7 +49,7 @@ const handleSubmit = (e: MouseEvent) => {
 </script>
 
 <template>
-  <div class="rounded-lg p-10 w-60%" bg="white dark:gray-700" m="t-10 auto">
+  <div class="rounded-lg p-10 w-80%" bg="white dark:gray-700" m="t-10 auto">
     <n-h2>
       Review Paper
     </n-h2>
@@ -108,14 +108,14 @@ const handleSubmit = (e: MouseEvent) => {
       <n-h3 class="m-0">
         Comment
       </n-h3>
-      <n-form-item label="Opinion" path="selectValue">
+      <n-form-item label="Opinion" path="opinion">
         <n-select
           v-model:value="formValue.opinion"
-          placeholder="Select"
+          placeholder="Select an opinion"
           :options="opinionOptions"
         />
       </n-form-item>
-      <n-form-item label="Comment" path="textareaValue">
+      <n-form-item label="Comment" path="comment">
         <n-input
           v-model:value="formValue.comment"
           placeholder="Please enter your comment"

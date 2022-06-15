@@ -14,7 +14,7 @@ handlePreprintDetail(props.id)
 </script>
 
 <template>
-  <div class="rounded-lg p-10 w-60%" bg="white dark:gray-700" m="t-10 auto">
+  <div class="rounded-lg p-10 w-80%" bg="white dark:gray-700" m="t-10 auto">
     <n-h2>
       Preprint Review Process
     </n-h2>

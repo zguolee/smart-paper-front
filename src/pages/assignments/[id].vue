@@ -55,7 +55,7 @@ const selectValue = ref<string | null>(null)
 </script>
 
 <template>
-  <div class="rounded-lg p-10 w-60%" bg="white dark:gray-700" m="t-10 auto">
+  <div class="rounded-lg p-10 w-80%" bg="white dark:gray-700" m="t-10 auto">
     <n-h2>
       Review Paper
     </n-h2>
