@@ -16,19 +16,19 @@ export function createFakeUserList() {
       token: 'fakeToken1',
       roles: [
         {
-          roleName: 'Admin',
+          title: 'Admin',
           value: 'admin',
         },
         {
-          roleName: 'Author',
+          title: 'Author',
           value: 'author',
         },
         {
-          roleName: 'Editor',
+          title: 'Editor',
           value: 'editor',
         },
         {
-          roleName: 'Reviewer',
+          title: 'Reviewer',
           value: 'reviewer',
         },
       ],
@@ -45,7 +45,7 @@ export function createFakeUserList() {
       token: 'fakeToken2',
       roles: [
         {
-          roleName: 'Tester',
+          title: 'Tester',
           value: 'test',
         },
       ],
@@ -57,7 +57,7 @@ export const fakeUserList = createFakeUserList() as any[]
 
 export default [
   {
-    url: '/api/register',
+    url: '/api/user/register',
     timeout: 200,
     method: 'post',
     response: ({ body }: { body: { username: string; password: string } }) => {
@@ -76,7 +76,7 @@ export default [
     },
   },
   {
-    url: '/api/login',
+    url: '/api/user/login',
     timeout: 200,
     method: 'post',
     response: ({ body }: { body: { username: string; password: string } }) => {
@@ -106,7 +106,7 @@ export default [
       const token = getRequestToken(request)
       if (!token)
         return resultError('Invalid token')
-      const checkUser = fakeUserList.find(item => item.token === token)
+      const checkUser = fakeUserList.find(item => item.token === token.split(' ')[1])
       if (!checkUser)
         return resultError('Invalid token!')
 
@@ -120,7 +120,7 @@ export default [
       const token = getRequestToken(request)
       if (!token)
         return resultError('Invalid token')
-      const checkUser = fakeUserList.find(item => item.token === token)
+      const checkUser = fakeUserList.find(item => item.token === token.split(' ')[1])
       if (!checkUser)
         return resultError('The corresponding user information was not obtained!')
 
@@ -134,7 +134,7 @@ export default [
       const token = getRequestToken(request)
       if (!token)
         return resultError('Invalid token')
-      const checkUser = fakeUserList.find(item => item.token === token)
+      const checkUser = fakeUserList.find(item => item.token === token.split(' ')[1])
       if (!checkUser)
         return resultError('The corresponding user information was not obtained!')
       Object.assign(checkUser, request.body)

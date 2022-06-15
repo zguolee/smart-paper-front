@@ -89,7 +89,7 @@ const handleUsersList = (page: number) => {
             <td flex="~ gap-2" items-center justify-start>
               <template v-for="role, _idx of user.roles" :key="_idx">
                 <n-tag type="success">
-                  {{ role.roleName }}
+                  {{ role.title }}
                 </n-tag>
               </template>
             </td>

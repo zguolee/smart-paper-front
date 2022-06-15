@@ -166,7 +166,7 @@ function createAxios(options?: Partial<CreateAxiosOptions>) {
     deepMerge(
       {
         // authenticationScheme: 'Bearer',
-        authenticationScheme: '',
+        authenticationScheme: 'Bearer',
         // baseURL: '/basic-api',
         timeout: 5 * 1000,
         // 接口可能会有通用的地址部分，可以统一抽取出来

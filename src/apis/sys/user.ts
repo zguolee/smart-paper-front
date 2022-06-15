@@ -9,8 +9,8 @@ import type { ErrorMessageMode } from '~/utils/http/types'
 import { defHttp } from '~/utils/http'
 
 enum Api {
-  Login = '/login',
-  Register = '/register',
+  Login = '/user/login',
+  Register = '/user/register',
   Logout = '/logout',
   UserInfo = '/user',
   Users = '/users',

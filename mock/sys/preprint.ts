@@ -104,12 +104,12 @@ export default [
           return (preprint.statusProgress?.length || 0) > 2
 
         if (strategy === 'reviewed') {
-          const checkUser = fakeUserList.find(item => item.token === token) as unknown as UserInfoModel
+          const checkUser = fakeUserList.find(item => item.token === token.split(' ')[1]) as unknown as UserInfoModel
           return preprint.comments?.some(comment => comment.reviewer.id.toString() === checkUser.id)
         }
 
         if (strategy === 'unreviewed') {
-          const checkUser = fakeUserList.find(item => item.token === token) as unknown as UserInfoModel
+          const checkUser = fakeUserList.find(item => item.token === token.split(' ')[1]) as unknown as UserInfoModel
           return !preprint.comments?.some(comment => comment.reviewer.id.toString() === checkUser.id)
         }
 
@@ -178,7 +178,7 @@ export default [
         comment,
         date: new Date().toISOString(),
         reviewer: {
-          id: fakeUserList.find(item => item.token === token)?.id as string,
+          id: fakeUserList.find(item => item.token === token.split(' ')[1])?.id as string,
           firstName: 'Neil',
           lastName: 'Lee',
           email: '',

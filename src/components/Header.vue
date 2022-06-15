@@ -9,7 +9,7 @@ const { t, availableLocales, locale } = useI18n()
 const { VITE_APP_TITLE } = getAppEnvConfig()
 
 const userInfo = computed(() => userStore.getUserInfo())
-const rolesOptions = computed(() => userInfo.value.roles.map(role => ({ label: role.roleName, value: role.value })))
+const rolesOptions = computed(() => userInfo.value.roles.map(role => ({ label: role.title, value: role.value })))
 
 const toggleLocales = () => {
   const locales = availableLocales

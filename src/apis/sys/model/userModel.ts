@@ -9,7 +9,7 @@ export interface LoginParams {
 }
 
 export interface RoleInfo {
-  roleName: string
+  title: string
   value: string
 }
 
