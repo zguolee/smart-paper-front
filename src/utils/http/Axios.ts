@@ -4,7 +4,7 @@ import qs from 'qs'
 import { cloneDeep } from 'lodash-es'
 import type { CreateAxiosOptions } from './axiosTransform'
 import { AxiosCanceler } from './axiosCanceler'
-import type { RequestOptions, Result } from './types'
+import type { RequestOptions, Result, UploadFileParams } from './types'
 import { ContentTypeEnum, RequestEnum } from '~/enums/httpEnum'
 import { isFunction } from '~/utils/is'
 
@@ -119,6 +119,34 @@ export class VAxios {
     return {
       ...config,
       data: qs.stringify(config.data, { arrayFormat: 'brackets' }),
+    }
+  }
+
+  /**
+   * @description:  File Upload
+   */
+  uploadFile<T = any>(config: AxiosRequestConfig, params: UploadFileParams) {
+    const formData = new window.FormData()
+    const customFilename = params.name || 'file'
+
+    if (params.filename)
+      formData.append(customFilename, params.file, params.filename)
+
+    else
+      formData.append(customFilename, params.file)
+
+    if (params.data) {
+      Object.keys(params.data).forEach((key) => {
+        const value = params.data![key]
+        if (Array.isArray(value)) {
+          value.forEach((item) => {
+            formData.append(`${key}[]`, item)
+          })
+          return
+        }
+
+        formData.append(key, params.data![key])
+      })
     }
   }
 
