@@ -3,12 +3,14 @@ import type { FormInst } from 'naive-ui'
 import { useMessage } from 'naive-ui'
 import type { PreprintModel } from '~/apis/sys/model/preprintModel'
 import { getPreprintDetailApi, reviewPreprintApi } from '~/apis/sys/preprint'
+import { useUserStore } from '~/stores/user'
 
 const props = defineProps<{ id: string }>()
 
+const { t } = useI18n()
 const router = useRouter()
 const message = useMessage()
-const { t } = useI18n()
+const userStore = useUserStore()
 
 const formRef = ref<FormInst | null>(null)
 const formValue = ref({
@@ -25,7 +27,7 @@ const opinionOptions = ['Strong Accept', 'Accept', 'Weak Accept', 'Reject', 'Wea
 const preprintDetail = ref<PreprintModel>()
 const handlePreprintDetail = async (id: string) => {
   preprintDetail.value = await getPreprintDetailApi(id)
-  Object.assign(formValue.value, preprintDetail.value.comments.find(item => item.reviewer.id === id.toString()))
+  Object.assign(formValue.value, preprintDetail.value.comments.find(item => item.reviewer.id === userStore.getUserInfo().id))
 }
 handlePreprintDetail(props.id)
 
@@ -35,11 +37,11 @@ const handleSubmit = (e: MouseEvent) => {
     if (!errors) {
       const res = await reviewPreprintApi(props.id, formValue.value as any)
       if (res.id) {
-        message.success(t('dashboard.preprints.update.success'))
+        message.success(t('review.preprints.update.success'))
         router.replace('/review')
       }
       else {
-        message.error(t('dashboard.preprints.update.failure'))
+        message.error(t('review.preprints.update.failure'))
       }
     }
   })
