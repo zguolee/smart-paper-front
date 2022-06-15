@@ -45,6 +45,9 @@ const routerPath: any = {
       <n-button class="text-xl" text tag="a" target="_blank" type="primary">
         {{ t('menu.preprints') }}
       </n-button>
+      <n-button class="text-xl" text tag="a" target="_blank" type="primary" @click="router.replace('/users')">
+        {{ t('menu.users') }}
+      </n-button>
     </div>
     <div flex="~ gap-2" justify-center items-center>
       <div

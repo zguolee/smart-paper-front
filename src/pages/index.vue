@@ -29,7 +29,7 @@ const router = useRouter()
       </div>
       <n-button
         class="mx-auto mt-10 !bg-white !text-green-600 !w-40" type="default" block
-        @click="router.push('/login')"
+        @click="router.replace('/login')"
       >
         GET STARTED
       </n-button>

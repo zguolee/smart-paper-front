@@ -1,6 +1,7 @@
 import type { MockMethod } from 'vite-plugin-mock'
 import type { RequestParams } from '../_util'
-import { getRequestToken, resultError, resultSuccess } from '../_util'
+import { getRequestToken, resultError, resultPageSuccess, resultSuccess } from '../_util'
+import type { UsersPageParams } from '~/apis/sys/model/userModel'
 
 export function createFakeUserList() {
   return [
@@ -98,7 +99,22 @@ export default [
     },
   },
   {
-    url: '/api/users',
+    url: '/api/logout',
+    timeout: 200,
+    method: 'get',
+    response: (request: RequestParams) => {
+      const token = getRequestToken(request)
+      if (!token)
+        return resultError('Invalid token')
+      const checkUser = fakeUserList.find(item => item.token === token)
+      if (!checkUser)
+        return resultError('Invalid token!')
+
+      return resultSuccess(undefined, { message: 'Token has been destroyed' })
+    },
+  },
+  {
+    url: '/api/user',
     method: 'get',
     response: (request: RequestParams) => {
       const token = getRequestToken(request)
@@ -112,18 +128,28 @@ export default [
     },
   },
   {
-    url: '/api/logout',
-    timeout: 200,
-    method: 'get',
+    url: '/api/user/:id',
+    method: 'put',
     response: (request: RequestParams) => {
       const token = getRequestToken(request)
       if (!token)
         return resultError('Invalid token')
       const checkUser = fakeUserList.find(item => item.token === token)
       if (!checkUser)
-        return resultError('Invalid token!')
-
-      return resultSuccess(undefined, { message: 'Token has been destroyed' })
+        return resultError('The corresponding user information was not obtained!')
+      Object.assign(checkUser, request.body)
+      return resultSuccess(checkUser)
+    },
+  },
+  {
+    url: '/api/users',
+    method: 'get',
+    response: (request: RequestParams) => {
+      const token = getRequestToken(request)
+      if (!token)
+        return resultError('Invalid token')
+      const { page = 1, pageSize = 5 } = request.query as UsersPageParams
+      return resultPageSuccess(page, pageSize, fakeUserList || [])
     },
   },
   {

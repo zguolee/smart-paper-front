@@ -5,15 +5,17 @@ enum Api {
   Preprints = '/preprints',
 }
 
-export const getPreprintListApi = (params: PreprintParams) => defHttp.get<GetPreprintListModel>({
-  url: Api.Preprints,
-  params,
-})
+export const getPreprintListApi = (params: PreprintParams) =>
+  defHttp.get<GetPreprintListModel>({ url: Api.Preprints, params })
 
-export const getPreprintDetailApi = (id: string) => defHttp.get<PreprintModel>({ url: `${Api.Preprints}/${id}` })
+export const getPreprintDetailApi = (id: string) =>
+  defHttp.get<PreprintModel>({ url: `${Api.Preprints}/${id}` })
 
-export const createPreprintApi = (params: any) => defHttp.post<PreprintModel>({ url: Api.Preprints, params })
+export const createPreprintApi = (params: any) =>
+  defHttp.post<PreprintModel>({ url: Api.Preprints, params })
 
-export const updatePreprintApi = (id: string, params: any) => defHttp.put<PreprintModel>({ url: `${Api.Preprints}/${id}`, params }, { errorMessageMode: 'message' })
+export const updatePreprintApi = (id: string, params: any) =>
+  defHttp.put<PreprintModel>({ url: `${Api.Preprints}/${id}`, params }, { errorMessageMode: 'message' })
 
-export const reviewPreprintApi = (id: string, params: any) => defHttp.post<PreprintModel>({ url: `${Api.Preprints}/${id}/review`, params })
+export const reviewPreprintApi = (id: string, params: any) =>
+  defHttp.post<PreprintModel>({ url: `${Api.Preprints}/${id}/review`, params })

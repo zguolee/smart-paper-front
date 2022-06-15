@@ -1,5 +1,6 @@
 menu:
   preprints: Preprints
+  users: Users
 
 dashboard:
   index:
@@ -67,6 +68,24 @@ review:
     update:
       success: Successfully updated preprint
       failure: Failed to update preprint
+
+users:
+  index:
+    user_list: User List
+    actions:
+      all: All
+      author: Author
+      reviewer: Reviewer
+      editor: Editor
+    user:
+      name: Name
+      email: Email
+      organization: Organization
+      institute: Institute
+      avatar: Avatar
+      roles: Roles
+      update_time: Update time
+      actions: Actions
 
 button:
   about: About

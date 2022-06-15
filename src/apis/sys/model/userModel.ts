@@ -1,3 +1,5 @@
+import type { BasicFetchResult, BasicPageParams } from '~/apis/model/baseModel'
+
 /**
  * @description: Login interface parameters
  */
@@ -34,3 +36,7 @@ export interface UserInfoModel {
   institute?: string
   avatar?: string
 }
+
+export type UsersPageParams = BasicPageParams
+
+export type GetUsersModel = BasicFetchResult<UserInfoModel>
