@@ -11,10 +11,13 @@ dashboard:
       rejected: Rejected
       create_new_preprint: Create a new preprint
     preprint:
+      title_abstract: Title and Abstract
+      journal: Journal
       year: Year
       authors: Authors
       status: Status
       update_time: Update time
+      actions: Actions
   preprints:
     index:
       create_preprint: Create Preprint
@@ -33,10 +36,13 @@ assignments:
       unfinished: Unfinished
       finished: Finished
     preprint:
+      title_abstract: Title and Abstract
+      journal: Journal
       year: Year
-      reviewers: Reviewers
+      authors: Authors
       status: Status
       update_time: Update time
+      actions: Actions
   preprints:
     index:
       create_preprint: Create Preprint
@@ -55,10 +61,13 @@ review:
       unreviewed: Unreviewed
       reviewed: Reviewed
     preprint:
+      title_abstract: Title and Abstract
+      journal: Journal
       year: Year
-      reviewers: Reviewers
+      authors: Authors
       status: Status
       update_time: Update time
+      actions: Actions
   preprints:
     index:
       create_preprint: Create Preprint

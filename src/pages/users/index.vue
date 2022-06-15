@@ -63,7 +63,7 @@ const handleUsersList = (page: number) => {
           </n-radio-button>
         </n-radio-group>
       </div>
-      <n-table>
+      <n-table class="mt-4" :single-line="false">
         <thead>
           <tr>
             <th>ID</th>
@@ -77,7 +77,11 @@ const handleUsersList = (page: number) => {
         </thead>
         <tbody>
           <tr v-for="(user, _userIdx) of usersResult?.items" :key="_userIdx">
-            <td>{{ _userIdx + 1 }}</td>
+            <td>
+              <n-tag type="primary" class="h-10 w-10" flex="~" items-center justify-center>
+                {{ _userIdx + 1 }}
+              </n-tag>
+            </td>
             <td>{{ `${user.firstName} ${user.lastName}` }}</td>
             <td>{{ user.email }}</td>
             <td>{{ user.organization }}</td>
@@ -97,7 +101,7 @@ const handleUsersList = (page: number) => {
           </tr>
         </tbody>
       </n-table>
-      <div p="t4" flex="~" justify="center">
+      <div class="mt-4" flex="~" justify="center">
         <n-pagination
           v-model:page="paginationState.page"
           :page-count="Math.floor((usersResult?.total || 0) / paginationState.pageSize) + 1"
