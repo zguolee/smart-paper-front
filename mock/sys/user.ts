@@ -11,9 +11,10 @@ export function createFakeUserList() {
       firstName: 'Admin',
       lastName: 'Lee',
       avatar: 'https://avatars.githubusercontent.com/u/40738594?s=40&v=4',
-      desc: 'manager',
       password: '123456',
       token: 'fakeToken1',
+      organization: 'East China Normal University',
+      institute: 'Software Engineering',
       roles: [
         {
           title: 'Admin',
@@ -41,12 +42,13 @@ export function createFakeUserList() {
       password: '123456',
       realName: 'test user',
       avatar: 'https://q1.qlogo.cn/g?b=qq&nk=339449197&s=640',
-      desc: 'tester',
       token: 'fakeToken2',
+      organization: 'East China Normal University',
+      institute: 'Software Engineering',
       roles: [
         {
-          title: 'Tester',
-          value: 'test',
+          title: 'Editor',
+          value: 'editor',
         },
       ],
     },
@@ -134,7 +136,9 @@ export default [
       const token = getRequestToken(request)
       if (!token)
         return resultError('Invalid token')
-      const checkUser = fakeUserList.find(item => item.token === token.split(' ')[1])
+      const { id } = request.query as { id: number | string }
+
+      const checkUser = fakeUserList.find(item => item.id = id)
       if (!checkUser)
         return resultError('The corresponding user information was not obtained!')
       Object.assign(checkUser, request.body)

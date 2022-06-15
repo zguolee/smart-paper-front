@@ -31,12 +31,14 @@ export interface UserInfoModel {
   username: string
   firstName: string
   lastName: string
-  email: string
-  organization?: string
-  institute?: string
-  avatar?: string
+  organization: string
+  institute: string
+  avatar: string
 }
 
-export type UsersPageParams = BasicPageParams
+export type UsersStrategy = 'all' | 'author' | 'reviewer' | 'editor' | 'admin'
+
+export type UsersPageParams = BasicPageParams & { strategy: UsersStrategy }
 
 export type GetUsersModel = BasicFetchResult<UserInfoModel>
+

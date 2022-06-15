@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { getPreprintListApi } from '~/apis/sys/preprint'
-import type { PreprintModel } from '~/apis//sys/model/preprintModel'
+import type { PreprintModel, PreprintStrategy } from '~/apis//sys/model/preprintModel'
 import { useUserStore } from '~/stores/user'
 
 const { t } = useI18n()
 const router = useRouter()
 const userStore = useUserStore()
 
-const checkStrategy = ref<'all' | 'unreviewed' | 'reviewed'>('all')
+const checkStrategy = ref<PreprintStrategy>('all')
 
 const preprintResult = ref<{
   items: PreprintModel[]
@@ -25,7 +25,7 @@ const paginationState = ref<{
 const getPreprintList = async (
   page: number,
   pageSize: number,
-  strategy: 'all' | 'unreviewed' | 'reviewed',
+  strategy: PreprintStrategy,
 ) => {
   const res = await getPreprintListApi({ page, pageSize, strategy })
   preprintResult.value = res
@@ -66,7 +66,7 @@ const checkReviewed = (item: PreprintModel) => {
           </n-radio-button>
         </n-radio-group>
       </div>
-      <n-table class="mt-4" :single-line="false">
+      <n-table class="mt-4 text-center" :single-line="false">
         <thead>
           <tr>
             <th>ID</th>
@@ -80,13 +80,11 @@ const checkReviewed = (item: PreprintModel) => {
         </thead>
         <tbody>
           <tr v-for="(preprint, _preprintIdx) of preprintResult?.items" :key="_preprintIdx">
-            <td>
-              <n-tag type="primary" class="h-10 w-10" flex="~" items-center justify-center>
-                {{ _preprintIdx + 1 }}
-              </n-tag>
-            </td>
-            <td>
-              <div>{{ preprint.title }}</div>
+            <td>{{ _preprintIdx + 1 }}</td>
+            <td class="text-left">
+              <div class="font-black text-xl">
+                {{ preprint.title }}
+              </div>
               <n-ellipsis style="width: 400px;">
                 {{ preprint.abstract }}
               </n-ellipsis>

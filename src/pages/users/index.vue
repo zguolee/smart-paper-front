@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { getUsersApi } from '~/apis/sys/user'
-import type { UserInfoModel } from '~/apis/sys/model/userModel'
+import type { FormInst } from 'naive-ui'
+import { useMessage } from 'naive-ui'
+import { getUsersApi, updateUserInfoApi } from '~/apis/sys/user'
+import type { UserInfoModel, UsersStrategy } from '~/apis/sys/model/userModel'
 
 const { t } = useI18n()
-const router = useRouter()
+const message = useMessage()
 
-const checkStrategy = ref<'all' | 'accepted' | 'rejected'>('all')
+const checkStrategy = ref<UsersStrategy>('all')
 
 const usersResult = ref<{
   items: UserInfoModel[]
@@ -23,21 +25,75 @@ const paginationState = ref<{
 const getUsersList = async (
   page: number,
   pageSize: number,
-  strategy: 'all' | 'accepted' | 'rejected',
+  strategy: UsersStrategy,
 ) => {
-  const res = await getUsersApi({ page, pageSize })
+  const res = await getUsersApi({ page, pageSize, strategy })
   usersResult.value = res
 }
-getUsersList(paginationState.value.page, paginationState.value.pageSize, checkStrategy.value)
+
+const reload = () => getUsersList(paginationState.value.page, paginationState.value.pageSize, checkStrategy.value)
+
+reload()
 
 watch(checkStrategy, (strategy) => {
   paginationState.value.page = 1
-  getUsersList(paginationState.value.page, paginationState.value.pageSize, strategy)
+  reload()
 })
 
 const handleUsersList = (page: number) => {
   paginationState.value.page = page
   getUsersList(paginationState.value.page, paginationState.value.pageSize, checkStrategy.value)
+}
+
+const showDrawer = ref(false)
+const formRef = ref<FormInst | null>(null)
+const formValue = ref({
+  username: '',
+  firstName: '',
+  lastName: '',
+  organization: '',
+  institute: '',
+  roles: [] as string[],
+})
+
+const rolesOptions = [
+  { label: 'Author', value: 'author' },
+  { label: 'Editor', value: 'editor' },
+  { label: 'Reviewer', value: 'reviewer' },
+  { label: 'Admin', value: 'admin' },
+]
+
+const editUserId = ref<string | number>(0)
+
+const handleShowEditDrawer = (userInfo: UserInfoModel) => {
+  editUserId.value = userInfo.id
+  formValue.value = {
+    username: userInfo.username,
+    firstName: userInfo.firstName,
+    lastName: userInfo.lastName,
+    organization: userInfo.organization,
+    institute: userInfo.institute,
+    roles: userInfo.roles.map(role => role.value),
+  }
+  showDrawer.value = true
+}
+
+const handleSubmit = (e: MouseEvent) => {
+  e.preventDefault()
+  formRef.value?.validate(async (errors) => {
+    if (!errors) {
+      formValue.value.roles = formValue.value.roles.map(role => ({ title: role[0].toUpperCase() + role.slice(1), value: role })) as []
+      const res = await updateUserInfoApi(editUserId.value, formValue.value)
+      if (res.id) {
+        message.success(t('users.index.update.success'))
+        reload()
+        showDrawer.value = false
+      }
+      else {
+        message.error(t('users.index.update.failure'))
+      }
+    }
+  })
 }
 </script>
 
@@ -63,7 +119,7 @@ const handleUsersList = (page: number) => {
           </n-radio-button>
         </n-radio-group>
       </div>
-      <n-table class="mt-4" :single-line="false">
+      <n-table class="mt-4 text-center" :single-line="false">
         <thead>
           <tr>
             <th>ID</th>
@@ -77,25 +133,23 @@ const handleUsersList = (page: number) => {
         </thead>
         <tbody>
           <tr v-for="(user, _userIdx) of usersResult?.items" :key="_userIdx">
-            <td>
-              <n-tag type="primary" class="h-10 w-10" flex="~" items-center justify-center>
-                {{ _userIdx + 1 }}
-              </n-tag>
-            </td>
+            <td>{{ _userIdx + 1 }}</td>
             <td>{{ `${user.firstName} ${user.lastName}` }}</td>
-            <td>{{ user.email }}</td>
+            <td>{{ user.username }}</td>
             <td>{{ user.organization }}</td>
             <td>{{ user.institute }}</td>
-            <td flex="~ gap-2" items-center justify-start>
-              <template v-for="role, _idx of user.roles" :key="_idx">
-                <n-tag type="success">
-                  {{ role.title }}
-                </n-tag>
-              </template>
+            <td>
+              <div flex="~ gap-2" items-center justify-start>
+                <template v-for="role, _idx of user.roles" :key="_idx">
+                  <n-tag type="success">
+                    {{ role.title }}
+                  </n-tag>
+                </template>
+              </div>
             </td>
             <td>
-              <NButton size="small" type="primary" dashed>
-                Detail
+              <NButton size="small" type="primary" dashed @click="handleShowEditDrawer(user)">
+                Edit
               </NButton>
             </td>
           </tr>
@@ -109,6 +163,49 @@ const handleUsersList = (page: number) => {
         />
       </div>
     </div>
+    <n-drawer v-model:show="showDrawer" :width="502">
+      <n-drawer-content :title="t('users.index.update.user_info')" closable>
+        <n-form ref="formRef" :model="formValue">
+          <n-form-item
+            label="Username(Email)" path="username"
+            :rule="{ required: true, message: 'Please input email', trigger: ['input', 'blur'] }"
+          >
+            <n-input v-model:value="formValue.username" placeholder="Please input Username" />
+          </n-form-item>
+          <n-form-item
+            label="First Name" path="firstName"
+            :rule="{ required: true, message: 'Please input first name', trigger: ['input', 'blur'] }"
+          >
+            <n-input v-model:value="formValue.firstName" placeholder="Please input First Name" />
+          </n-form-item>
+          <n-form-item
+            label="Last Name" path="lastName"
+            :rule="{ required: true, message: 'Please input last name', trigger: ['input', 'blur'] }"
+          >
+            <n-input v-model:value="formValue.lastName" placeholder="Please input Last Name" />
+          </n-form-item>
+          <n-form-item
+            label="Organization" path="organization"
+            :rule="{ required: true, message: 'Please input organization', trigger: ['input', 'blur'] }"
+          >
+            <n-input v-model:value="formValue.organization" placeholder="Please input Organization" />
+          </n-form-item>
+          <n-form-item
+            label="Institute" path="institute"
+            :rule="{ required: true, message: 'Please input institute', trigger: ['input', 'blur'] }"
+          >
+            <n-input v-model:value="formValue.institute" placeholder="Please input Institute" />
+          </n-form-item>
+          <n-form-item label="Roles" path="roles" placeholder="Please select roles">
+            <n-select v-model:value="formValue.roles" multiple :options="rolesOptions" />
+          </n-form-item>
+
+          <n-button block type="primary" @click="handleSubmit">
+            Save
+          </n-button>
+        </n-form>
+      </n-drawer-content>
+    </n-drawer>
   </div>
 </template>
 

@@ -26,7 +26,7 @@ export const doLogout = () => defHttp.get({ url: Api.Logout })
 
 export const getUserInfoApi = () => defHttp.get<UserInfoModel>({ url: Api.UserInfo })
 
-export const updateUserInfoApi = (id: string, params: UserInfoModel) =>
+export const updateUserInfoApi = (id: string | number, params: any) =>
   defHttp.put<UserInfoModel>({ url: `${Api.UserInfo}/${id}`, params })
 
 export const getUsersApi = (params: UsersPageParams) =>

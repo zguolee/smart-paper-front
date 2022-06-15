@@ -1,11 +1,15 @@
 <script setup lang="ts">
 import type { FormInst } from 'naive-ui'
+import { useMessage } from 'naive-ui'
+import { updateUserInfoApi } from '~/apis/sys/user'
 import { useUserStore } from '~/stores/user'
 
-const props = defineProps<{ id: string }>()
+const props = defineProps<{ id: string | number }>()
 
 const router = useRouter()
 const userStore = useUserStore()
+const { t } = useI18n()
+const message = useMessage()
 
 const userInfo = computed(() => userStore.getUserInfo())
 
@@ -14,18 +18,22 @@ const formValue = ref({
   username: userInfo.value.username,
   firstName: userInfo.value.firstName,
   lastName: userInfo.value.lastName,
-  organization: '',
-  institute: '',
-  country: '',
-  city: '',
-  state: '',
+  organization: userInfo.value.organization,
+  institute: userInfo.value.institute,
 })
 
 const handleSubmit = (e: MouseEvent) => {
   e.preventDefault()
   formRef.value?.validate(async (errors) => {
-    if (!errors)
-      console.log(formValue.value)
+    if (!errors) {
+      const res = await updateUserInfoApi(props.id, formValue.value)
+      userStore.setUserInfo(res)
+      if (res.id)
+        message.success(t('users.index.update.success'))
+
+      else
+        message.error(t('users.index.update.failure'))
+    }
   })
 }
 </script>
@@ -43,25 +51,25 @@ const handleSubmit = (e: MouseEvent) => {
         <n-input v-model:value="formValue.username" placeholder="Please input Username" />
       </n-form-item>
       <n-form-item
-        label="First Name:" path="firstName"
+        label="First Name" path="firstName"
         :rule="{ required: true, message: 'Please input first name', trigger: ['input', 'blur'] }"
       >
         <n-input v-model:value="formValue.firstName" placeholder="Please input First Name" />
       </n-form-item>
       <n-form-item
-        label="Last Name:" path="lastName"
+        label="Last Name" path="lastName"
         :rule="{ required: true, message: 'Please input last name', trigger: ['input', 'blur'] }"
       >
         <n-input v-model:value="formValue.lastName" placeholder="Please input Last Name" />
       </n-form-item>
       <n-form-item
-        label="Organization:" path="organization"
+        label="Organization" path="organization"
         :rule="{ required: true, message: 'Please input organization', trigger: ['input', 'blur'] }"
       >
         <n-input v-model:value="formValue.organization" placeholder="Please input Organization" />
       </n-form-item>
       <n-form-item
-        label="Institute:" path="institute"
+        label="Institute" path="institute"
         :rule="{ required: true, message: 'Please input institute', trigger: ['input', 'blur'] }"
       >
         <n-input v-model:value="formValue.institute" placeholder="Please input Institute" />

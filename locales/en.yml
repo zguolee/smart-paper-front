@@ -95,6 +95,16 @@ users:
       roles: Roles
       update_time: Update time
       actions: Actions
+    update:
+      user_info: User Info
+      name: Name
+      email: Email
+      organization: Organization
+      institute: Institute
+      avatar: Avatar
+      roles: Roles
+      success: Successfully updated user
+      failure: Failed to update user
 
 button:
   about: About

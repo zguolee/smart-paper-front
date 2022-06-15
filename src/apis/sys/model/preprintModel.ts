@@ -50,10 +50,8 @@ export interface PreprintModel {
   reviewers: AuthorModel[]
 }
 
-export interface StrategyParams {
-  strategy: 'all' | 'rejected' | 'accepted' | 'unfinished' | 'finished' | 'unreviewed' | 'reviewed'
-}
+export type PreprintStrategy = 'all' | 'rejected' | 'accepted' | 'unfinished' | 'finished' | 'unreviewed' | 'reviewed'
 
-export type PreprintParams = BasicPageParams & StrategyParams
+export type PreprintParams = BasicPageParams & { strategy: PreprintStrategy }
 
 export type GetPreprintListModel = BasicFetchResult<PreprintModel>
