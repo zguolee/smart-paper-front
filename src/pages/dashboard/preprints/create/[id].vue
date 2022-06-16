@@ -17,6 +17,7 @@ const formValue = ref({
       firstName: '',
       lastName: '',
       email: '',
+      primary: false,
     },
   ],
   title: '',
@@ -28,14 +29,14 @@ const preprintDetail = ref<PreprintModel>()
 
 const handlePreprintDetail = async (id: string) => {
   preprintDetail.value = await getPreprintDetailApi(id)
-  Object.assign(formValue.value, preprintDetail.value)
+  Object.assign(formValue.value, preprintDetail.value, { authors: JSON.parse(preprintDetail.value.authors), keywords: JSON.parse(preprintDetail.value.keywords) })
 }
 
 handlePreprintDetail(props.id)
 
 const removeAuthorItem = (index: number) => formValue.value.authors.splice(index, 1)
 
-const addAuthorItem = () => formValue.value.authors.push({ firstName: '', lastName: '', email: '' })
+const addAuthorItem = () => formValue.value.authors.push({ firstName: '', lastName: '', email: '', primary: false })
 
 const handleSubmit = (e: MouseEvent) => {
   e.preventDefault()
@@ -69,17 +70,24 @@ const formRules: FormRules = {
 <template>
   <div class="rounded-lg p-10 w-80%" bg="white dark:gray-700" m="t-10 auto">
     <n-h2>
-      {{ t('dashboard.preprints.index.create_preprint') }}
+      Edit Preprint
     </n-h2>
-    <n-thing title="Periodical information">
-      <div>
-        Title: The first phase of the Smart Paper
-      </div>
-      <div>
-        Date: February 15, 2022 to June 15, 2022
-      </div>
-    </n-thing>
     <n-form ref="formRef" :model="formValue" :rules="formRules" label-placement="top">
+      <n-h3>
+        Title and Abstract
+      </n-h3>
+      <n-form-item
+        label="Title" path="title"
+        :rule="{ required: true, message: 'Please input preprint title', trigger: ['input', 'blur'] }"
+      >
+        <n-input v-model:value="formValue.title" placeholder="Please input Preprint Title" />
+      </n-form-item>
+      <n-form-item
+        label="Abstract" path="abstract"
+        :rule="{ required: true, message: 'Please input abstract', trigger: ['input', 'blur'] }"
+      >
+        <n-input v-model:value="formValue.abstract" type="textarea" placeholder="Please input Abstract" />
+      </n-form-item>
       <n-h3>
         Authors information
       </n-h3>
@@ -89,56 +97,43 @@ const formRules: FormRules = {
             {{ _authorIdx + 1 }}
           </n-tag>
           <div flex="~ gap-2 1">
-            <NFormItem
-              label="First Name:" :path="`authors[${_authorIdx}].firstName`" label-placement="top"
+            <n-form-item
+              label="First Name" :path="`authors[${_authorIdx}].firstName`" label-placement="top"
               class="flex-1" :rule="{ required: true, message: 'Please input first name', trigger: ['input', 'blur'] }"
             >
-              <NInput v-model:value="author.firstName" placeholder="Please input First Name" />
-            </NFormItem>
-            <NFormItem
-              label="Last Name:" :path="`authors[${_authorIdx}].lastName`" label-placement="top" class="flex-1"
-              :rule="{ required: true, message: 'Please input last name', trigger: ['input', 'blur'] }"
+              <n-input v-model:value="author.firstName" placeholder="Please input First Name" />
+            </n-form-item>
+            <n-form-item
+              label="Last Name" :path="`authors[${_authorIdx}].lastName`" label-placement="top"
+              class="flex-1" :rule="{ required: true, message: 'Please input last name', trigger: ['input', 'blur'] }"
             >
-              <NInput v-model:value="author.lastName" placeholder="Please input Last Name" />
-            </NFormItem>
-            <NFormItem
-              label="Email:" :path="`authors[${_authorIdx}].email`" label-placement="top" class="flex-1"
+              <n-input v-model:value="author.lastName" placeholder="Please input Last Name" />
+            </n-form-item>
+            <n-form-item
+              label="Email" :path="`authors[${_authorIdx}].email`" label-placement="top" class="flex-1"
               :rule="{ required: true, message: 'Please input email', trigger: ['input', 'blur'] }"
             >
-              <NInput v-model:value="author.email" placeholder="Please input Email" />
-            </NFormItem>
+              <n-input v-model:value="author.email" placeholder="Please input Email" />
+            </n-form-item>
+            <n-form-item label="Corresponding" :path="`authors[${_authorIdx}].primary`" label-placement="top">
+              <n-switch v-model:value="author.primary" />
+            </n-form-item>
           </div>
-          <NButton secondary type="error" @click="removeAuthorItem(_authorIdx)">
+          <n-button secondary type="error" @click="removeAuthorItem(_authorIdx)">
             Delete
-          </NButton>
+          </n-button>
         </div>
       </template>
-      <NButton type="primary" block dashed @click="addAuthorItem">
+      <n-button type="primary" block dashed @click="addAuthorItem">
         <div text="xl" i="carbon-add" />
         Click here to add more author
-      </NButton>
-
-      <n-h3>
-        Title and Abstract
-      </n-h3>
-      <NFormItem
-        label="Preprint Title:" path="title"
-        :rule="{ required: true, message: 'Please input preprint title', trigger: ['input', 'blur'] }"
-      >
-        <NInput v-model:value="formValue.title" placeholder="Please input Preprint Title" />
-      </NFormItem>
-      <NFormItem
-        label="Abstract:" path="abstract"
-        :rule="{ required: true, message: 'Please input abstract', trigger: ['input', 'blur'] }"
-      >
-        <NInput v-model:value="formValue.abstract" type="textarea" placeholder="Please input Abstract" />
-      </NFormItem>
+      </n-button>
       <n-h3>
         Keywords
       </n-h3>
-      <NFormItem label="Keywords:" path="keywords">
-        <n-dynamic-tags v-model:value="formValue.keywords" type="success" />
-      </NFormItem>
+      <n-form-item label="Keywords" path="keywords">
+        <n-dynamic-tags v-model:value="formValue.keywords" size="large" type="success" />
+      </n-form-item>
       <n-h3>
         Attachments
       </n-h3>

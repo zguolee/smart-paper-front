@@ -113,7 +113,7 @@ const checkReviewed = (item: PreprintModel) => {
               </n-tag>
             </td>
             <td>
-              {{ preprint.updateTime }}
+              {{ preprint.updatedAt }}
             </td>
             <td>
               <NButton type="primary" dashed @click="router.push(`/review/${preprint.id}`)">

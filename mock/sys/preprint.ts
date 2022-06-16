@@ -2,10 +2,10 @@ import type { MockMethod } from 'vite-plugin-mock'
 import type { RequestParams } from '../_util'
 import { getRequestToken, resultError, resultPageSuccess, resultSuccess } from '../_util'
 import { fakeUserList } from './user'
-import type { AuthorModel, JournalModel, PreprintModel, PreprintParams, StatusModel } from '~/apis/sys/model/preprintModel'
+import type { AuthorModel, PreprintModel, PreprintParams, StatusModel } from '~/apis/sys/model/preprintModel'
 import type { UserInfoModel } from '~/apis/sys/model/userModel'
 
-const createStatusProgress = (): StatusModel[] => {
+const createstatusProgresses = (): StatusModel[] => {
   const firstStatus: StatusModel = { title: 'First trial', date: '2020-01-01', comment: '' }
   const receptionStatus: StatusModel = { title: 'Reception', date: '2020-01-02', comment: '' }
   const acceptedStatus: StatusModel = { title: 'Accepted', date: '2020-01-03', comment: 'Check email for more information.' }
@@ -49,11 +49,11 @@ export function createFakePreprintList() {
           name: 'Journal 1',
           url: 'http://www.journal1.com',
           year: '2020',
-        } as JournalModel,
+        },
         keywords: ['keyword1', 'keyword2'],
-        statusProgress: createStatusProgress(),
-        createTime: ['2020-01-05', '2020-01-06'][Math.floor(Math.random() * 2)],
-        updateTime: ['2020-01-05', '2020-01-06'][Math.floor(Math.random() * 2)],
+        statusProgresses: createstatusProgresses(),
+        createdAt: ['2020-01-05', '2020-01-06'][Math.floor(Math.random() * 2)],
+        updatedAt: ['2020-01-05', '2020-01-06'][Math.floor(Math.random() * 2)],
         reviewers: Array.from(
           { length: Math.floor(Math.random() * 3) },
           (_, i) => {
@@ -98,10 +98,10 @@ export default [
           return true
 
         if (strategy === 'unfinished')
-          return (preprint.statusProgress?.length || 3) <= 2
+          return (preprint.statusProgresses?.length || 3) <= 2
 
         if (strategy === 'finished')
-          return (preprint.statusProgress?.length || 0) > 2
+          return (preprint.statusProgresses?.length || 0) > 2
 
         if (strategy === 'reviewed') {
           const checkUser = fakeUserList.find(item => item.token === token.split(' ')[1]) as unknown as UserInfoModel
@@ -113,7 +113,7 @@ export default [
           return !preprint.comments?.some(comment => comment.reviewer.id.toString() === checkUser.id)
         }
 
-        return preprint.statusProgress?.some(status => status.title.toLowerCase() === strategy.toLowerCase())
+        return preprint.statusProgresses?.some(status => status.title.toLowerCase() === strategy.toLowerCase())
       })
       return resultPageSuccess(page, pageSize, resPreprintList || [])
     },

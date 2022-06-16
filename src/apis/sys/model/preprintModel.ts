@@ -8,21 +8,10 @@ export interface AuthorModel {
   primary: boolean
 }
 
-export interface JournalModel {
-  id: string | number
-  name: string
-  language: string
-  url: string
-  year: string
-  submitStartDate: string
-  submitEndDate: string
-  publishDate: string
-}
-
 export interface StatusModel {
   title: 'First trial' | 'Reception' | 'Accepted' | 'Rejected' | 'Pay' | 'Finish'
-  date: string
-  comment: string
+  createdAt: string
+  content: string
 }
 
 export interface CommentModel {
@@ -36,16 +25,15 @@ export interface PreprintModel {
   id?: string | number
   title: string
   abstract: string
-  keywords: string[]
-  creator?: AuthorModel
-  authors: AuthorModel[]
-  journal: JournalModel
-  createTime?: string
-  updateTime?: string
-  status?: ''
-  statusProgress?: StatusModel[]
+  keywords: string
+  creator: AuthorModel
+  authors: string
+  createdAt?: string
+  updatedAt?: string
+  status: ''
+  statusProgresses?: StatusModel[]
   pdfUrl: string
-  sourceUrl?: string
+  sourceUrl: string
   comments: CommentModel[]
   reviewers: AuthorModel[]
 }

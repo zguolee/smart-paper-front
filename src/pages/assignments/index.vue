@@ -95,19 +95,19 @@ const handlePreprintList = (page: number) => {
             </td>
             <td>
               <n-tag
-                :type="preprint.statusProgress?.some(item => item.title === 'Rejected') ? 'error' : 'success'"
+                :type="preprint.statusProgresses?.some(item => item.title === 'Rejected') ? 'error' : 'success'"
                 size="small"
               >
                 <div
                   class="cursor-pointer font-black underline"
                   @click="router.push(`/assignments/preprints/${preprint.id}`)"
                 >
-                  {{ preprint.statusProgress?.slice(-1)[0]?.title }}
+                  {{ preprint.statusProgresses?.slice(-1)[0]?.title }}
                 </div>
               </n-tag>
             </td>
             <td>
-              {{ preprint.updateTime }}
+              {{ preprint.updatedAt }}
             </td>
             <td>
               <NButton type="primary" dashed @click="router.push(`/assignments/${preprint.id}`)">
