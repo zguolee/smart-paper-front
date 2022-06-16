@@ -14,15 +14,12 @@ const userStore = useUserStore()
 
 const formRef = ref<FormInst | null>(null)
 const formValue = ref({
-  opinion: '',
-  comment: '',
+  opinion: 'Accept',
+  content: '',
 })
 
 const opinionOptions = ['Strong Accept', 'Accept', 'Weak Accept', 'Reject', 'Weak Reject', 'Strong Reject']
-  .map(item => ({
-    label: item,
-    value: item,
-  }))
+  .map((item) => { return { label: item, value: item } })
 
 const preprintDetail = ref<PreprintModel>()
 const handlePreprintDetail = async (id: string) => {
@@ -54,15 +51,6 @@ const handleSubmit = (e: MouseEvent) => {
       Review Paper
     </n-h2>
 
-    <n-descriptions title="Periodical information" label-placement="left">
-      <n-descriptions-item label="Title">
-        The first phase of the Smart Paper
-      </n-descriptions-item>
-      <n-descriptions-item label="Date">
-        February 15, 2022 to June 15, 2022
-      </n-descriptions-item>
-    </n-descriptions>
-
     <n-descriptions title="Preprint information" :column="1" label-align="right" label-placement="left">
       <n-descriptions-item label="Title">
         {{ preprintDetail?.title }}
@@ -71,20 +59,20 @@ const handleSubmit = (e: MouseEvent) => {
         {{ preprintDetail?.abstract }}
       </n-descriptions-item>
       <n-descriptions-item label="Keywords">
-        {{ preprintDetail?.keywords.join('; ') }}
+        {{ preprintDetail?.keywords ? JSON.parse(preprintDetail?.keywords).join('; ') : [] }}
       </n-descriptions-item>
     </n-descriptions>
 
     <n-descriptions title="Authors" label-align="right" label-placement="left">
-      <template v-for="author, _idx of preprintDetail?.authors" :key="_idx">
-        <n-descriptions-item label="First Name">
-          {{ author.firstName }}
-        </n-descriptions-item>
-        <n-descriptions-item label="Last Name">
-          {{ author.lastName }}
+      <template v-for="author, _idx of preprintDetail?.authors ? JSON.parse(preprintDetail?.authors) : []" :key="_idx">
+        <n-descriptions-item label="Name">
+          {{ author.firstName }} {{ author.lastName }}
         </n-descriptions-item>
         <n-descriptions-item label="Email">
           {{ author.email }}
+        </n-descriptions-item>
+        <n-descriptions-item label="Corresponding">
+          {{ author.corresponding }}
         </n-descriptions-item>
       </template>
     </n-descriptions>
@@ -109,17 +97,11 @@ const handleSubmit = (e: MouseEvent) => {
         Comment
       </n-h3>
       <n-form-item label="Opinion" path="opinion">
-        <n-select
-          v-model:value="formValue.opinion"
-          placeholder="Select an opinion"
-          :options="opinionOptions"
-        />
+        <n-select v-model:value="formValue.opinion" placeholder="Select an opinion" :options="opinionOptions" />
       </n-form-item>
-      <n-form-item label="Comment" path="comment">
+      <n-form-item label="Content" path="content">
         <n-input
-          v-model:value="formValue.comment"
-          placeholder="Please enter your comment"
-          type="textarea"
+          v-model:value="formValue.content" placeholder="Please enter your content" type="textarea"
           :autosize="{ minRows: 3, maxRows: 5 }"
         />
       </n-form-item>

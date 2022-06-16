@@ -148,6 +148,17 @@ export class VAxios {
         formData.append(key, params.data![key])
       })
     }
+
+    return this.axiosInstance.request<T>({
+      ...config,
+      method: 'POST',
+      data: formData,
+      headers: {
+        'Content-type': ContentTypeEnum.FORM_DATA,
+        // @ts-expect-error
+        'ignoreCancelToken': true,
+      },
+    })
   }
 
   request<T = any>(config: AxiosRequestConfig, options?: RequestOptions): Promise<T> {

@@ -65,7 +65,6 @@ const handlePreprintList = (page: number) => {
           <tr>
             <th>ID</th>
             <th>{{ t('assignments.index.preprint.title_abstract') }}</th>
-            <th>{{ t('assignments.index.preprint.journal') }}</th>
             <th>{{ t('assignments.index.preprint.authors') }}</th>
             <th>{{ t('assignments.index.preprint.status') }}</th>
             <th>{{ t('assignments.index.preprint.update_time') }}</th>
@@ -83,12 +82,11 @@ const handlePreprintList = (page: number) => {
                 {{ preprint.abstract }}
               </n-ellipsis>
             </td>
-            <td> {{ preprint.journal.year }}</td>
             <td>
               <div flex="~ gap-2" items-center justify-start>
-                <template v-for="author, _idx of preprint.authors" :key="_idx">
+                <template v-for="author, _idx of JSON.parse(preprint.authors)" :key="_idx">
                   <n-badge :dot="author.primary">
-                    <n-tag> {{ author.firstName }} </n-tag>
+                    <n-tag> {{ `${author.firstName} ${author.lastName}` }} </n-tag>
                   </n-badge>
                 </template>
               </div>
@@ -98,10 +96,7 @@ const handlePreprintList = (page: number) => {
                 :type="preprint.statusProgresses?.some(item => item.title === 'Rejected') ? 'error' : 'success'"
                 size="small"
               >
-                <div
-                  class="cursor-pointer font-black underline"
-                  @click="router.push(`/assignments/preprints/${preprint.id}`)"
-                >
+                <div class="cursor-pointer font-black underline">
                   {{ preprint.statusProgresses?.slice(-1)[0]?.title }}
                 </div>
               </n-tag>

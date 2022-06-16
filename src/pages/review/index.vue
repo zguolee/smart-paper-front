@@ -71,7 +71,6 @@ const checkReviewed = (item: PreprintModel) => {
           <tr>
             <th>ID</th>
             <th>{{ t('review.index.preprint.title_abstract') }}</th>
-            <th>{{ t('review.index.preprint.journal') }}</th>
             <th>{{ t('review.index.preprint.authors') }}</th>
             <th>{{ t('review.index.preprint.status') }}</th>
             <th>{{ t('review.index.preprint.update_time') }}</th>
@@ -89,25 +88,18 @@ const checkReviewed = (item: PreprintModel) => {
                 {{ preprint.abstract }}
               </n-ellipsis>
             </td>
-            <td> {{ preprint.journal.year }}</td>
             <td>
               <div flex="~ gap-2" items-center justify-start>
-                <template v-for="author, _idx of preprint.authors" :key="_idx">
+                <template v-for="author, _idx of JSON.parse(preprint.authors)" :key="_idx">
                   <n-badge :dot="author.primary">
-                    <n-tag> {{ author.firstName }} </n-tag>
+                    <n-tag> {{ `${author.firstName} ${author.lastName}` }} </n-tag>
                   </n-badge>
                 </template>
               </div>
             </td>
             <td>
-              <n-tag
-                :type="checkReviewed(preprint) ? 'success' : 'error'"
-                size="small"
-              >
-                <div
-                  class="cursor-pointer font-black underline"
-                  @click="router.push(`/review/preprints/${preprint.id}`)"
-                >
+              <n-tag :type="checkReviewed(preprint) ? 'success' : 'error'" size="small">
+                <div class="cursor-pointer font-black underline">
                   {{ checkReviewed(preprint) ? 'Reviewed' : 'Unreviewed' }}
                 </div>
               </n-tag>

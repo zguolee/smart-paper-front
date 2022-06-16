@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import type { FormInst, FormItemRule, FormRules } from 'naive-ui'
+import type { FormInst, FormItemRule, FormRules, UploadCustomRequestOptions } from 'naive-ui'
 import { useMessage } from 'naive-ui'
 import type { PreprintModel } from '~/apis/sys/model/preprintModel'
 import { getPreprintDetailApi, updatePreprintApi } from '~/apis/sys/preprint'
+import { uploadApi } from '~/apis/sys/upload'
+import { downloadByUrl } from '~/utils/file/download'
 
 const props = defineProps<{ id: string }>()
 
@@ -17,12 +19,14 @@ const formValue = ref({
       firstName: '',
       lastName: '',
       email: '',
-      primary: false,
+      corresponding: false,
     },
   ],
   title: '',
   abstract: '',
   keywords: [],
+  pdfUrl: '',
+  sourceUrl: '',
 })
 
 const preprintDetail = ref<PreprintModel>()
@@ -36,13 +40,13 @@ handlePreprintDetail(props.id)
 
 const removeAuthorItem = (index: number) => formValue.value.authors.splice(index, 1)
 
-const addAuthorItem = () => formValue.value.authors.push({ firstName: '', lastName: '', email: '', primary: false })
+const addAuthorItem = () => formValue.value.authors.push({ firstName: '', lastName: '', email: '', corresponding: false })
 
 const handleSubmit = (e: MouseEvent) => {
   e.preventDefault()
   formRef.value?.validate(async (errors) => {
     if (!errors) {
-      const res = await updatePreprintApi(props.id, formValue.value as any)
+      const res = await updatePreprintApi(props.id, Object.assign({}, formValue.value, { authors: JSON.stringify(formValue.value.authors), keywords: JSON.stringify(formValue.value.keywords) }))
       if (res.id) {
         message.success(t('dashboard.preprints.update.success'))
         router.replace('/dashboard')
@@ -64,6 +68,39 @@ const formRules: FormRules = {
       return true
     },
   },
+}
+
+const uploadProcess = ref(0)
+
+const handleUpload = async (file: File | Blob, type: 'document' | 'code') => {
+  const { data } = await uploadApi(
+    { file },
+    (progressEvent: ProgressEvent) => {
+      uploadProcess.value = ((progressEvent.loaded / progressEvent.total) * 100) | 0
+    },
+  )
+  const { code, url } = data
+  if (code === 0) {
+    if (type === 'document')
+      formValue.value.pdfUrl = url
+    else
+      formValue.value.sourceUrl = url
+    message.success(t('dashboard.preprints.create.upload.success'))
+  }
+
+  else { message.error(t('dashboard.preprints.create.upload.failure')) }
+}
+
+const handleUploadDocument = async ({ file }: UploadCustomRequestOptions) => {
+  handleUpload(file.file as File | Blob, 'document')
+}
+
+const handleUploadCode = async ({ file }: UploadCustomRequestOptions) => {
+  handleUpload(file.file as File | Blob, 'code')
+}
+
+const handleDownload = () => {
+  downloadByUrl({ url: formValue.value.pdfUrl, target: '_blank', fileName: 'doc.pdf' })
 }
 </script>
 
@@ -116,7 +153,7 @@ const formRules: FormRules = {
               <n-input v-model:value="author.email" placeholder="Please input Email" />
             </n-form-item>
             <n-form-item label="Corresponding" :path="`authors[${_authorIdx}].primary`" label-placement="top">
-              <n-switch v-model:value="author.primary" />
+              <n-switch v-model:value="author.corresponding" />
             </n-form-item>
           </div>
           <n-button secondary type="error" @click="removeAuthorItem(_authorIdx)">
@@ -134,31 +171,36 @@ const formRules: FormRules = {
       <n-form-item label="Keywords" path="keywords">
         <n-dynamic-tags v-model:value="formValue.keywords" size="large" type="success" />
       </n-form-item>
-      <n-h3>
-        Attachments
-      </n-h3>
-      <div flex="~ gap-6">
-        <n-upload directory-dnd action="https://www.mocky.io/v2/5e4bafc63100007100d8b70f">
-          <n-upload-dragger>
-            <div m="b-2">
-              <div i="carbon-document-attachment" text="2xl" />
-            </div>
-            <n-text text="sm">
-              Click or drag the file to this area to upload.
-            </n-text>
-          </n-upload-dragger>
-        </n-upload>
-        <n-upload directory-dnd action="https://www.mocky.io/v2/5e4bafc63100007100d8b70f">
-          <n-upload-dragger>
-            <div m="b-2">
-              <div i="carbon-code" text="2xl" />
-            </div>
-            <n-text text="sm">
-              Click or drag the file to this area to upload.
-            </n-text>
-          </n-upload-dragger>
-        </n-upload>
-      </div>
+      <n-descriptions title="Attachments" label-align="right" label-placement="left">
+        <n-descriptions-item label="PDF document">
+          <div class="flex gap-2">
+            <n-upload :max="1" :custom-request="handleUploadDocument">
+              <n-button type="primary">
+                <div class="mr-2" i="carbon-document" text="2xl" />
+                Click to upload PDF document
+              </n-button>
+            </n-upload>
+            <n-button v-if="formValue.pdfUrl" type="info" @click="handleDownload">
+              <div i="carbon-document" m="r2" />
+              Download
+            </n-button>
+          </div>
+        </n-descriptions-item>
+        <n-descriptions-item label="Source file">
+          <div class="flex gap-2">
+            <n-upload :max="1" :custom-request="handleUploadCode">
+              <n-button type="primary">
+                <div class="mr-2" i="carbon-code" text="2xl" />
+                Click to upload source code
+              </n-button>
+            </n-upload>
+            <n-button v-if="formValue.sourceUrl" type="info">
+              <div i="carbon-branch" m="r2" />
+              Download
+            </n-button>
+          </div>
+        </n-descriptions-item>
+      </n-descriptions>
       <div class="mx-auto w-60%" flex="~ gap-6" justify-center items-center>
         <NButton class="flex-1 mt-10" type="primary" @click="handleSubmit">
           Submit

@@ -99,7 +99,7 @@ const handleShowPreprintStatusProgresses = (preprint: PreprintModel) => {
             <td>
               <div flex="~ gap-2" items-center justify-start>
                 <template v-for="author, _idx of JSON.parse(preprint.authors)" :key="_idx">
-                  <n-badge :dot="author.primary">
+                  <n-badge :dot="author.corresponding">
                     <n-tag> {{ `${author.firstName} ${author.lastName}` }} </n-tag>
                   </n-badge>
                 </template>

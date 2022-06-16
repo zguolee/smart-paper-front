@@ -24,6 +24,9 @@ dashboard:
     create:
       success: Successfully created preprint
       failure: Failed to create preprint
+      upload:
+        success: Successfully uploaded
+        failure: Failed to upload
     update:
       success: Successfully updated preprint
       failure: Failed to update preprint

@@ -6,12 +6,12 @@ import type { AuthorModel, PreprintModel, PreprintParams, StatusModel } from '~/
 import type { UserInfoModel } from '~/apis/sys/model/userModel'
 
 const createstatusProgresses = (): StatusModel[] => {
-  const firstStatus: StatusModel = { title: 'First trial', date: '2020-01-01', comment: '' }
-  const receptionStatus: StatusModel = { title: 'Reception', date: '2020-01-02', comment: '' }
-  const acceptedStatus: StatusModel = { title: 'Accepted', date: '2020-01-03', comment: 'Check email for more information.' }
-  const rejectedStatus: StatusModel = { title: 'Rejected', date: '2020-01-03', comment: 'Check email for more information.' }
-  const payStatus: StatusModel = { title: 'Pay', date: '2020-01-04', comment: 'You have paid.' }
-  const finishStatus: StatusModel = { title: 'Finish', date: '2020-01-05', comment: '' }
+  const firstStatus: StatusModel = { title: 'First trial', createdAt: '2020-01-01', content: '' }
+  const receptionStatus: StatusModel = { title: 'Reception', createdAt: '2020-01-02', content: '' }
+  const acceptedStatus: StatusModel = { title: 'Accepted', createdAt: '2020-01-03', content: 'Check email for more information.' }
+  const rejectedStatus: StatusModel = { title: 'Rejected', createdAt: '2020-01-03', content: 'Check email for more information.' }
+  const payStatus: StatusModel = { title: 'Pay', createdAt: '2020-01-04', content: 'You have paid.' }
+  const finishStatus: StatusModel = { title: 'Finish', createdAt: '2020-01-05', content: '' }
 
   return [[firstStatus],
     [firstStatus, receptionStatus],
@@ -44,16 +44,10 @@ export function createFakePreprintList() {
             primary: false,
           },
         ] as AuthorModel[],
-        journal: {
-          id: '1',
-          name: 'Journal 1',
-          url: 'http://www.journal1.com',
-          year: '2020',
-        },
         keywords: ['keyword1', 'keyword2'],
         statusProgresses: createstatusProgresses(),
         createdAt: ['2020-01-05', '2020-01-06'][Math.floor(Math.random() * 2)],
-        updatedAt: ['2020-01-05', '2020-01-06'][Math.floor(Math.random() * 2)],
+        upcreatedAtdAt: ['2020-01-05', '2020-01-06'][Math.floor(Math.random() * 2)],
         reviewers: Array.from(
           { length: Math.floor(Math.random() * 3) },
           (_, i) => {
@@ -64,11 +58,11 @@ export function createFakePreprintList() {
               email: 'example@mail.com',
             }
           }),
-        comments: [
+        contents: [
           {
             opinion: 'Strong Accept',
-            comment: 'Here is the comment.'.repeat(Math.floor(Math.random() * 10) + 1),
-            date: '2020-01-05',
+            content: 'Here is the content.'.repeat(Math.floor(Math.random() * 10) + 1),
+            createdAt: '2020-01-05',
             reviewer: {
               id: ['1', '2', '3'][Math.floor(Math.random() * 2)],
               firstName: 'Neil',
@@ -105,12 +99,12 @@ export default [
 
         if (strategy === 'reviewed') {
           const checkUser = fakeUserList.find(item => item.token === token.split(' ')[1]) as unknown as UserInfoModel
-          return preprint.comments?.some(comment => comment.reviewer.id.toString() === checkUser.id)
+          return preprint.contents?.some(content => content.reviewer.id.toString() === checkUser.id)
         }
 
         if (strategy === 'unreviewed') {
           const checkUser = fakeUserList.find(item => item.token === token.split(' ')[1]) as unknown as UserInfoModel
-          return !preprint.comments?.some(comment => comment.reviewer.id.toString() === checkUser.id)
+          return !preprint.contents?.some(content => content.reviewer.id.toString() === checkUser.id)
         }
 
         return preprint.statusProgresses?.some(status => status.title.toLowerCase() === strategy.toLowerCase())
@@ -172,11 +166,11 @@ export default [
       if (!preprint)
         return resultError('Preprint not found')
       const { body } = request
-      const { opinion, comment } = body as { opinion: any; comment: string }
-      preprint.comments.push({
+      const { opinion, content } = body as { opinion: any; content: string }
+      preprint.contents.push({
         opinion,
-        comment,
-        date: new Date().toISOString(),
+        content,
+        createdAt: new createdAt().toISOString(),
         reviewer: {
           id: fakeUserList.find(item => item.token === token.split(' ')[1])?.id as string,
           firstName: 'Neil',

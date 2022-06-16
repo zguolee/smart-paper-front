@@ -148,7 +148,7 @@ const handleSubmit = (e: MouseEvent) => {
               </div>
             </td>
             <td>
-              <NButton size="small" type="primary" dashed @click="handleShowEditDrawer(user)">
+              <NButton type="primary" dashed @click="handleShowEditDrawer(user)">
                 Edit
               </NButton>
             </td>

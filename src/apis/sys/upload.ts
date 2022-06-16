@@ -2,7 +2,7 @@ import type { UploadApiResult } from './model/uploadModel'
 import { defHttp } from '~/utils/http'
 import type { UploadFileParams } from '~/utils/http/types'
 
-const uploadUrl = ''
+const uploadUrl = '/upload'
 
 /**
  * @description: Upload interface
