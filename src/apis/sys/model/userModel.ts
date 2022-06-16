@@ -9,6 +9,7 @@ export interface LoginParams {
 }
 
 export interface RoleInfo {
+  id: number
   title: string
   value: string
 }

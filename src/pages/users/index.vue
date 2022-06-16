@@ -53,14 +53,14 @@ const formValue = ref({
   lastName: '',
   organization: '',
   institute: '',
-  roles: [] as string[],
+  roles: [] as number[],
 })
 
 const rolesOptions = [
-  { label: 'Author', value: 'author' },
-  { label: 'Editor', value: 'editor' },
-  { label: 'Reviewer', value: 'reviewer' },
-  { label: 'Admin', value: 'admin' },
+  { label: 'Author', value: 4 },
+  { label: 'Editor', value: 3 },
+  { label: 'Reviewer', value: 2 },
+  { label: 'Admin', value: 1 },
 ]
 
 const editUserId = ref<string | number>(0)
@@ -73,7 +73,7 @@ const handleShowEditDrawer = (userInfo: UserInfoModel) => {
     lastName: userInfo.lastName,
     organization: userInfo.organization,
     institute: userInfo.institute,
-    roles: userInfo.roles.map(role => role.value),
+    roles: userInfo.roles.map(role => role.id),
   }
   showDrawer.value = true
 }
@@ -82,12 +82,12 @@ const handleSubmit = (e: MouseEvent) => {
   e.preventDefault()
   formRef.value?.validate(async (errors) => {
     if (!errors) {
-      formValue.value.roles = formValue.value.roles.map(role => ({ title: role[0].toUpperCase() + role.slice(1), value: role })) as []
+      formValue.value.roles = formValue.value.roles.map(role => ({ id: role })) as []
       const res = await updateUserInfoApi(editUserId.value, formValue.value)
       if (res.id) {
+        showDrawer.value = false
         message.success(t('users.index.update.success'))
         reload()
-        showDrawer.value = false
       }
       else {
         message.error(t('users.index.update.failure'))
