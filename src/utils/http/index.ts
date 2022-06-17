@@ -9,6 +9,7 @@ import { deepMerge, setObjToUrlParams } from '~/utils'
 import { getToken } from '~/utils/auth'
 import { isString } from '~/utils/is'
 
+const apiUrl = 'http://121.41.227.161:18080/api'
 const urlPrefix = ''
 
 /**
@@ -191,7 +192,7 @@ function createAxios(options?: Partial<CreateAxiosOptions>) {
           // 消息提示类型
           errorMessageMode: 'message',
           // 接口地址
-          apiUrl: '/api',
+          apiUrl,
           // 接口拼接地址
           urlPrefix,
           //  是否加入时间戳

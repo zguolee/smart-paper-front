@@ -208,9 +208,6 @@ const handleDownload = (type: 'document' | 'code') => {
         <NButton class="flex-1 mt-10" type="primary" @click="handleSubmit">
           Submit
         </NButton>
-        <NButton class="flex-1 mt-10" type="info">
-          Save
-        </NButton>
         <NButton class="flex-1 mt-10" @click="router.back()">
           Back
         </NButton>
