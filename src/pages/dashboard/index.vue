@@ -1,12 +1,10 @@
 <script setup lang="ts">
 import { getPreprintListApi } from '~/apis/sys/preprint'
-import type { PreprintModel, PreprintStrategy } from '~/apis//sys/model/preprintModel'
+import type { PreprintModel } from '~/apis//sys/model/preprintModel'
 import { formatDate } from '~/utils/dayjs'
 
 const { t } = useI18n()
 const router = useRouter()
-
-const checkStrategy = ref<PreprintStrategy>('all')
 
 const preprintResult = ref<{
   items: PreprintModel[]
@@ -24,21 +22,15 @@ const paginationState = ref<{
 const getPreprintList = async (
   page: number,
   pageSize: number,
-  strategy: PreprintStrategy,
 ) => {
-  const res = await getPreprintListApi({ page, pageSize, strategy })
+  const res = await getPreprintListApi({ page, pageSize })
   preprintResult.value = res
 }
-getPreprintList(paginationState.value.page, paginationState.value.pageSize, checkStrategy.value)
-
-watch(checkStrategy, (strategy) => {
-  paginationState.value.page = 1
-  getPreprintList(paginationState.value.page, paginationState.value.pageSize, strategy)
-})
+getPreprintList(paginationState.value.page, paginationState.value.pageSize)
 
 const handlePreprintList = (page: number) => {
   paginationState.value.page = page
-  getPreprintList(paginationState.value.page, paginationState.value.pageSize, checkStrategy.value)
+  getPreprintList(paginationState.value.page, paginationState.value.pageSize)
 }
 
 const showStatusProgressesModal = ref(false)
@@ -52,22 +44,9 @@ const handleShowPreprintStatusProgresses = (preprint: PreprintModel) => {
 <template>
   <div>
     <div class="rounded-lg p-10 w-80%" bg="white dark:gray-700" m="t-10 auto">
-      <div m="b-2" flex="~" justify="between" items="center">
-        <n-h2>
-          {{ t('dashboard.index.preprint_list') }}
-        </n-h2>
-        <n-radio-group v-model:value="checkStrategy">
-          <n-radio-button value="all">
-            {{ t('dashboard.index.actions.all') }}
-          </n-radio-button>
-          <n-radio-button value="accepted">
-            {{ t('dashboard.index.actions.accepted') }}
-          </n-radio-button>
-          <n-radio-button value="rejected">
-            {{ t('dashboard.index.actions.rejected') }}
-          </n-radio-button>
-        </n-radio-group>
-      </div>
+      <n-h2>
+        {{ t('dashboard.index.preprint_list') }}
+      </n-h2>
       <n-button type="primary" block dashed @click="router.push('/dashboard/preprints/create')">
         <div text="xl" i="carbon-add" />
         {{ t('dashboard.index.actions.create_new_preprint') }}

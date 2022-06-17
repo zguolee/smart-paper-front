@@ -43,6 +43,7 @@ assignments:
       journal: Journal
       year: Year
       authors: Authors
+      reviewers: Reviewers
       status: Status
       update_time: Update time
       actions: Actions

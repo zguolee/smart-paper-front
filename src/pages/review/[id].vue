@@ -22,10 +22,16 @@ const formValue = ref({
 const opinionOptions = ['Strong Accept', 'Accept', 'Weak Accept', 'Reject', 'Weak Reject', 'Strong Reject']
   .map((item) => { return { label: item, value: item } })
 
+const isReviewing = ref(false)
 const preprintDetail = ref<PreprintModel>()
 const handlePreprintDetail = async (id: string) => {
   preprintDetail.value = await getPreprintDetailApi(id)
-  Object.assign(formValue.value, preprintDetail.value.comments.find(item => item.reviewer.id === userStore.getUserInfo().id))
+  const hasReviewed = preprintDetail.value.comments.find(item => item.reviewer.id === userStore.getUserInfo().id)
+  isReviewing.value = hasReviewed !== undefined
+  if (isReviewing.value && hasReviewed) {
+    formValue.value.opinion = hasReviewed.opinion
+    formValue.value.content = hasReviewed.content
+  }
 }
 handlePreprintDetail(props.id)
 
@@ -33,7 +39,7 @@ const handleSubmit = (e: MouseEvent) => {
   e.preventDefault()
   formRef.value?.validate(async (errors) => {
     if (!errors) {
-      const res = await reviewPreprintApi(props.id, formValue.value as any)
+      const res = await reviewPreprintApi(props.id, { comment: formValue.value as any })
       if (res.id) {
         message.success(t('review.preprints.update.success'))
         router.replace('/review')
@@ -114,8 +120,8 @@ const handleDownload = (type: 'document' | 'code') => {
         />
       </n-form-item>
       <div class="mx-auto w-40%" flex="~ gap-6" justify-center items-center>
-        <n-button class="flex-1 mt-10" type="primary" @click="handleSubmit">
-          Save
+        <n-button class="flex-1 mt-10" type="primary" :disabled="isReviewing" @click="handleSubmit">
+          {{ isReviewing ? 'You have already Review' : 'Submit' }}
         </n-button>
         <n-button class="flex-1 mt-10" @click="router.back()">
           Back

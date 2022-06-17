@@ -18,7 +18,7 @@ export const updatePreprintApi = (id: string, params: any) =>
   defHttp.put<PreprintModel>({ url: `${Api.Preprints}/${id}`, params }, { errorMessageMode: 'message' })
 
 export const reviewPreprintApi = (id: string, params: any) =>
-  defHttp.post<PreprintModel>({ url: `${Api.Preprints}/${id}/review`, params })
+  defHttp.put<PreprintModel>({ url: `${Api.Preprints}/${id}/comment`, params })
 
 export const distributionPreprintApi = (id: string, params: any) =>
   defHttp.put<PreprintModel>({ url: `${Api.Preprints}/${id}/distribution`, params })

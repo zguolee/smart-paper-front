@@ -1,12 +1,10 @@
 <script setup lang="ts">
 import { getPreprintListApi } from '~/apis/sys/preprint'
-import type { PreprintModel, PreprintStrategy } from '~/apis//sys/model/preprintModel'
+import type { PreprintModel } from '~/apis//sys/model/preprintModel'
 import { formatDate } from '~/utils/dayjs'
 
 const router = useRouter()
 const { t } = useI18n()
-
-const checkStrategy = ref<PreprintStrategy>('all')
 
 const preprintResult = ref<{
   items: PreprintModel[]
@@ -24,49 +22,31 @@ const paginationState = ref<{
 const getPreprintList = async (
   page: number,
   pageSize: number,
-  strategy: PreprintStrategy,
 ) => {
-  const res = await getPreprintListApi({ page, pageSize, strategy })
+  const res = await getPreprintListApi({ page, pageSize })
   preprintResult.value = res
 }
-getPreprintList(paginationState.value.page, paginationState.value.pageSize, checkStrategy.value)
-
-watch(checkStrategy, (strategy) => {
-  paginationState.value.page = 1
-  getPreprintList(paginationState.value.page, paginationState.value.pageSize, strategy)
-})
+getPreprintList(paginationState.value.page, paginationState.value.pageSize)
 
 const handlePreprintList = (page: number) => {
   paginationState.value.page = page
-  getPreprintList(paginationState.value.page, paginationState.value.pageSize, checkStrategy.value)
+  getPreprintList(paginationState.value.page, paginationState.value.pageSize)
 }
 </script>
 
 <template>
   <div>
     <div class="rounded-lg p-10 w-80%" bg="white dark:gray-700" m="t-10 auto">
-      <div m="b-2" flex="~" justify="between" items="center">
-        <n-h2>
-          {{ t('assignments.index.preprint_list') }}
-        </n-h2>
-        <n-radio-group v-model:value="checkStrategy">
-          <n-radio-button value="all">
-            {{ t('assignments.index.actions.all') }}
-          </n-radio-button>
-          <n-radio-button value="unfinished">
-            {{ t('assignments.index.actions.unfinished') }}
-          </n-radio-button>
-          <n-radio-button value="finished">
-            {{ t('assignments.index.actions.finished') }}
-          </n-radio-button>
-        </n-radio-group>
-      </div>
+      <n-h2>
+        {{ t('assignments.index.preprint_list') }}
+      </n-h2>
       <n-table class="mt-4 text-center" :single-line="false">
         <thead>
           <tr>
             <th>ID</th>
             <th>{{ t('assignments.index.preprint.title_abstract') }}</th>
             <th>{{ t('assignments.index.preprint.authors') }}</th>
+            <th>{{ t('assignments.index.preprint.reviewers') }}</th>
             <th>{{ t('assignments.index.preprint.status') }}</th>
             <th>{{ t('assignments.index.preprint.update_time') }}</th>
             <th>{{ t('assignments.index.preprint.actions') }}</th>
@@ -88,6 +68,15 @@ const handlePreprintList = (page: number) => {
                 <template v-for="author, _idx of JSON.parse(preprint.authors)" :key="_idx">
                   <n-badge :dot="author.primary">
                     <n-tag> {{ `${author.firstName} ${author.lastName}` }} </n-tag>
+                  </n-badge>
+                </template>
+              </div>
+            </td>
+            <td>
+              <div flex="~ gap-2" items-center justify-start>
+                <template v-for="reviewer, _idx of preprint.reviewers" :key="_idx">
+                  <n-badge :dot="reviewer.primary">
+                    <n-tag> {{ `${reviewer.firstName} ${reviewer.lastName}` }} </n-tag>
                   </n-badge>
                 </template>
               </div>

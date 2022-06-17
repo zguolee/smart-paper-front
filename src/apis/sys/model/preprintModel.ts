@@ -16,9 +16,10 @@ export interface StatusModel {
 
 export interface CommentModel {
   opinion: 'Strong Accept' | 'Accept' | 'Weak Accept' | 'Reject' | 'Weak Reject' | 'Strong Reject'
-  comment: string
+  content: string
   date: string
   reviewer: AuthorModel
+  createdAt: string
 }
 
 export interface PreprintModel {
@@ -38,8 +39,6 @@ export interface PreprintModel {
   reviewers: AuthorModel[]
 }
 
-export type PreprintStrategy = 'all' | 'rejected' | 'accepted' | 'unfinished' | 'finished' | 'unreviewed' | 'reviewed'
-
-export type PreprintParams = BasicPageParams & { strategy: PreprintStrategy }
+export type PreprintParams = BasicPageParams
 
 export type GetPreprintListModel = BasicFetchResult<PreprintModel>
