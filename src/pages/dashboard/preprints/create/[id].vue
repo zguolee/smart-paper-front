@@ -99,8 +99,11 @@ const handleUploadCode = async ({ file }: UploadCustomRequestOptions) => {
   handleUpload(file.file as File | Blob, 'code')
 }
 
-const handleDownload = () => {
-  downloadByUrl({ url: formValue.value.pdfUrl, target: '_blank', fileName: 'doc.pdf' })
+const handleDownload = (type: 'document' | 'code') => {
+  if (type === 'document')
+    downloadByUrl({ url: formValue.value.pdfUrl })
+  else
+    downloadByUrl({ url: formValue.value.sourceUrl })
 }
 </script>
 
@@ -180,7 +183,7 @@ const handleDownload = () => {
                 Click to upload PDF document
               </n-button>
             </n-upload>
-            <n-button v-if="formValue.pdfUrl" type="info" @click="handleDownload">
+            <n-button v-if="formValue.pdfUrl" type="info" @click="handleDownload('document')">
               <div i="carbon-document" m="r2" />
               Download
             </n-button>
@@ -194,7 +197,7 @@ const handleDownload = () => {
                 Click to upload source code
               </n-button>
             </n-upload>
-            <n-button v-if="formValue.sourceUrl" type="info">
+            <n-button v-if="formValue.sourceUrl" type="info" @click="handleDownload('code')">
               <div i="carbon-branch" m="r2" />
               Download
             </n-button>

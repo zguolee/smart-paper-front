@@ -2,6 +2,7 @@
 import { getPreprintListApi } from '~/apis/sys/preprint'
 import type { PreprintModel, PreprintStrategy } from '~/apis//sys/model/preprintModel'
 import { useUserStore } from '~/stores/user'
+import { formatDate } from '~/utils/dayjs'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -105,7 +106,7 @@ const checkReviewed = (item: PreprintModel) => {
               </n-tag>
             </td>
             <td>
-              {{ preprint.updatedAt }}
+              {{ formatDate(preprint.updatedAt) }}
             </td>
             <td>
               <NButton type="primary" dashed @click="router.push(`/review/${preprint.id}`)">

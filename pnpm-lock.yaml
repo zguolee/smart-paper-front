@@ -15,6 +15,7 @@ specifiers:
   '@vueuse/head': 0.7.6
   axios: ^0.27.2
   crypto-js: ^4.1.1
+  dayjs: ^1.11.3
   dotenv: ^16.0.1
   eslint: 8.17.0
   markdown-it-link-attributes: 4.0.0
@@ -50,6 +51,7 @@ dependencies:
   '@vueuse/head': 0.7.6_vue@3.2.37
   axios: 0.27.2
   crypto-js: 4.1.1
+  dayjs: 1.11.3
   mockjs: 1.1.0
   nprogress: 0.2.0
   pinia: 2.0.14_vcmyupim4cga7k7f5hngmth5py
@@ -3195,7 +3197,6 @@ packages:
 
   /dayjs/1.11.3:
     resolution: {integrity: sha512-xxwlswWOlGhzgQ4TKzASQkUhqERI3egRNqgV4ScR8wlANA/A9tZ7miXa44vTTKEq5l7vWoL5G57bG3zA+Kow0A==}
-    dev: true
 
   /debug/2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}

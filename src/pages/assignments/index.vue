@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { getPreprintListApi } from '~/apis/sys/preprint'
 import type { PreprintModel, PreprintStrategy } from '~/apis//sys/model/preprintModel'
+import { formatDate } from '~/utils/dayjs'
 
 const router = useRouter()
 const { t } = useI18n()
@@ -102,7 +103,7 @@ const handlePreprintList = (page: number) => {
               </n-tag>
             </td>
             <td>
-              {{ preprint.updatedAt }}
+              {{ formatDate(preprint.updatedAt) }}
             </td>
             <td>
               <NButton type="primary" dashed @click="router.push(`/assignments/${preprint.id}`)">

@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { getPreprintListApi } from '~/apis/sys/preprint'
 import type { PreprintModel, PreprintStrategy } from '~/apis//sys/model/preprintModel'
-
-const router = useRouter()
+import { formatDate } from '~/utils/dayjs'
 
 const { t } = useI18n()
+const router = useRouter()
 
 const checkStrategy = ref<PreprintStrategy>('all')
 
@@ -117,7 +117,7 @@ const handleShowPreprintStatusProgresses = (preprint: PreprintModel) => {
               </n-tag>
             </td>
             <td>
-              {{ preprint.updatedAt }}
+              {{ formatDate(preprint.updatedAt) }}
             </td>
             <td>
               <NButton
