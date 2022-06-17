@@ -4,7 +4,7 @@ export interface AuthorModel {
   id: string | number
   firstName: string
   lastName: string
-  email: string
+  username: string
   primary: boolean
 }
 

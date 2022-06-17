@@ -1,57 +1,72 @@
 <script setup lang="ts">
 import type { FormInst } from 'naive-ui'
+import { useMessage } from 'naive-ui'
 import type { PreprintModel } from '~/apis/sys/model/preprintModel'
-import { getPreprintDetailApi } from '~/apis/sys/preprint'
+import { distributionPreprintApi, getPreprintDetailApi } from '~/apis/sys/preprint'
+import { getUsersApi } from '~/apis/sys/user'
+import { downloadByUrl } from '~/utils/file/download'
 
 const props = defineProps<{ id: string }>()
 
+const { t } = useI18n()
 const router = useRouter()
+const message = useMessage()
 
 const reviewerOptions = ref<{
   label: string
   value: string
-}[]>([
-  { label: 'Neil1', value: '1' },
-  { label: 'Neil2', value: '2' },
-  { label: 'Neil3', value: '3' },
-])
+}[]>([])
 
 const formRef = ref<FormInst | null>(null)
 const formValue = ref({
-  reviewers: [],
-  reviewers2: [
-    { reviewer: null },
-  ],
+  reviewers: [null],
 })
 
 const preprintDetail = ref<PreprintModel>()
 const handlePreprintDetail = async (id: string) => {
   preprintDetail.value = await getPreprintDetailApi(id)
-  // if (preprintDetail.value?.reviewers && preprintDetail.value.reviewers.length > 0) {
-  //   formValue.value.reviewers = preprintDetail.value.reviewers.map(item => ({
-  //     reviewer: item.reviewer,
-  //   }))
-  // }
+  reviewerOptions.value = preprintDetail.value.reviewers.map(reviewer => ({
+    label: `${reviewer.firstName} ${reviewer.lastName} ${reviewer.username}`,
+    value: reviewer.id,
+  })) as any
+  formValue.value.reviewers = preprintDetail.value.reviewers.map(item => item.id) as any
 }
 handlePreprintDetail(props.id)
 
 const removeReviewerItem = (index: number) => formValue.value.reviewers.splice(index, 1)
 
-const addReviewerItem = () => formValue.value.reviewers.push({ reviewer: null })
+const addReviewerItem = () => formValue.value.reviewers.push(null)
 
-const handleSearch = (query: string) => {
-  console.log(query)
+const handleSearch = async (query: string) => {
+  const reviewers = await getUsersApi({ page: 1, pageSize: 10, strategy: 'all' })
+  reviewerOptions.value = reviewers.items.map(reviewer => ({
+    label: `${reviewer.firstName} ${reviewer.lastName} ${reviewer.username}`,
+    value: reviewer.id,
+  })) as any
 }
 
 const handleSubmit = (e: MouseEvent) => {
   e.preventDefault()
   formRef.value?.validate(async (errors) => {
-    if (!errors)
-      console.log(formValue.value)
+    if (!errors) {
+      const res = await distributionPreprintApi(props.id, { reviewers: formValue.value.reviewers.map(item => ({ id: item })) })
+      if (res.id) {
+        message.success(t('assignments.preprints.distribution.success'))
+        router.replace('/assignments')
+      }
+      else {
+        message.error(t('assignments.preprints.distribution.failure'))
+      }
+    }
   })
 }
 
-const selectValue = ref<string | null>(null)
+const handleDownload = (type: 'document' | 'code') => {
+  if (type === 'document')
+    downloadByUrl({ url: preprintDetail.value?.pdfUrl as string })
+  else
+    downloadByUrl({ url: preprintDetail.value?.sourceUrl as string })
+}
 </script>
 
 <template>
@@ -88,13 +103,13 @@ const selectValue = ref<string | null>(null)
 
     <n-descriptions title="Attachments" label-align="right" label-placement="left">
       <n-descriptions-item label="PDF document">
-        <n-button type="info" size="small">
+        <n-button type="info" @click="handleDownload('document')">
           <div i="carbon-document" m="r2" />
           Download the article
         </n-button>
       </n-descriptions-item>
       <n-descriptions-item label="Source file">
-        <n-button type="info" size="small">
+        <n-button type="info" @click="handleDownload('code')">
           <div i="carbon-branch" m="r2" />
           Download the source code
         </n-button>
@@ -105,55 +120,20 @@ const selectValue = ref<string | null>(null)
       <n-h3 class="m-0">
         Reviewers information
       </n-h3>
-      <n-form-item label="Reviewers" path="keywords">
-        <n-dynamic-tags v-model:value="formValue.reviewers" type="success">
-          <template #input="{ submit, deactivate }">
-            <n-auto-complete
-              ref="autoCompleteInstRef"
-              v-model:value="selectValue"
-              size="small"
-              :options="reviewerOptions"
-              placeholder="邮箱"
-              :clear-after-select="true"
-              @select="submit($event)"
-              @blur="deactivate"
-            />
-            <!-- <n-select
-              v-model:value="selectValue"
-              filterable placeholder="Please select reviewer"
-              :options="reviewerOptions" clearable remote on-update:value="submit($event)"
-              @search="handleSearch"
-              @blur="deactivate"
-            /> -->
-          </template>
-          <template #trigger="{ activate, disabled }">
-            <n-button
-              size="small"
-              type="primary"
-              dashed
-              :disabled="disabled"
-              @click="activate()"
-            >
-              <div i="carbon-add" m="r2" />
-              添加
-            </n-button>
-          </template>
-        </n-dynamic-tags>
-      </n-form-item>
-      <template v-for="(reviewer, _reviewerIdx) of formValue.reviewers" :key="_reviewerIdx">
+      <template v-for="(_reviewer, _reviewerIdx) of formValue.reviewers" :key="_reviewerIdx">
         <div flex="~ gap-4" justify-start items-center>
           <n-tag type="primary" class="h-10 w-10" flex="~" items-center justify-center>
             {{ _reviewerIdx + 1 }}
           </n-tag>
-          <NFormItem class="flex-1">
+          <n-form-item class="flex-1">
             <n-select
-              v-model:value="reviewer.reviewer" filterable placeholder="Please select reviewer"
+              v-model:value="formValue.reviewers[_reviewerIdx]" filterable placeholder="Please search reviewer by email or username"
               :options="reviewerOptions" clearable remote @search="handleSearch"
             />
-          </NFormItem>
-          <NButton secondary type="error" @click="removeReviewerItem(_reviewerIdx)">
+          </n-form-item>
+          <n-button secondary type="error" @click="removeReviewerItem(_reviewerIdx)">
             Delete
-          </NButton>
+          </n-button>
         </div>
       </template>
       <n-button type="primary" block dashed @click="addReviewerItem">

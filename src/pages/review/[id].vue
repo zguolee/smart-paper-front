@@ -4,6 +4,7 @@ import { useMessage } from 'naive-ui'
 import type { PreprintModel } from '~/apis/sys/model/preprintModel'
 import { getPreprintDetailApi, reviewPreprintApi } from '~/apis/sys/preprint'
 import { useUserStore } from '~/stores/user'
+import { downloadByUrl } from '~/utils/file/download'
 
 const props = defineProps<{ id: string }>()
 
@@ -43,6 +44,13 @@ const handleSubmit = (e: MouseEvent) => {
     }
   })
 }
+
+const handleDownload = (type: 'document' | 'code') => {
+  if (type === 'document')
+    downloadByUrl({ url: preprintDetail.value?.pdfUrl as string })
+  else
+    downloadByUrl({ url: preprintDetail.value?.sourceUrl as string })
+}
 </script>
 
 <template>
@@ -79,13 +87,13 @@ const handleSubmit = (e: MouseEvent) => {
 
     <n-descriptions title="Attachments" label-align="right" label-placement="left">
       <n-descriptions-item label="PDF document">
-        <n-button type="info" size="small">
+        <n-button type="info" @click="handleDownload('document')">
           <div i="carbon-document" m="r2" />
           Download the article
         </n-button>
       </n-descriptions-item>
       <n-descriptions-item label="Source file">
-        <n-button type="info" size="small">
+        <n-button type="info" @click="handleDownload('code')">
           <div i="carbon-branch" m="r2" />
           Download the source code
         </n-button>

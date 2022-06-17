@@ -82,8 +82,7 @@ const handleSubmit = (e: MouseEvent) => {
   e.preventDefault()
   formRef.value?.validate(async (errors) => {
     if (!errors) {
-      formValue.value.roles = formValue.value.roles.map(role => ({ id: role })) as []
-      const res = await updateUserInfoApi(editUserId.value, formValue.value)
+      const res = await updateUserInfoApi(editUserId.value, Object.assign({}, formValue.value, { roles: formValue.value.roles.map(role => ({ id: role })) as [] }))
       if (res.id) {
         showDrawer.value = false
         message.success(t('users.index.update.success'))
