@@ -185,12 +185,9 @@ const handleUploadCode = async ({ file }: UploadCustomRequestOptions) => {
           </div>
         </n-descriptions-item>
       </n-descriptions>
-      <div class="mx-auto w-60%" flex="~ gap-6" justify-center items-center>
+      <div class="mx-auto w-40%" flex="~ gap-6" justify-center items-center>
         <n-button class="flex-1 mt-10" type="primary" @click="handleSubmit">
           Submit
-        </n-button>
-        <n-button class="flex-1 mt-10" type="info">
-          Save
         </n-button>
         <n-button class="flex-1 mt-10" @click="router.back()">
           Back

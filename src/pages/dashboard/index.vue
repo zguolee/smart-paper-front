@@ -16,7 +16,7 @@ const paginationState = ref<{
   pageSize: number
 }>({
   page: 1,
-  pageSize: 6,
+  pageSize: 10,
 })
 
 const getPreprintList = async (
@@ -125,7 +125,7 @@ const handleShowPreprintStatusProgresses = (preprint: PreprintModel) => {
             <n-timeline-item
               :type="status.title === 'Rejected' ? 'error' : 'success'"
               :title="status.title"
-              :time="status.createdAt"
+              :time="formatDate(status.createdAt, 'YYYY-MM-DD HH:mm:ss')"
             >
               <template #default>
                 {{ status.content }}

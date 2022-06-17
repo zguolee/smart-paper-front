@@ -38,7 +38,7 @@ const removeReviewerItem = (index: number) => formValue.value.reviewers.splice(i
 const addReviewerItem = () => formValue.value.reviewers.push(null)
 
 const handleSearch = async (query: string) => {
-  const reviewers = await getUsersApi({ page: 1, pageSize: 10, strategy: 'all' })
+  const reviewers = await getUsersApi({ page: 1, pageSize: 10, strategy: 'all', username: query })
   reviewerOptions.value = reviewers.items.map(reviewer => ({
     label: `${reviewer.firstName} ${reviewer.lastName} ${reviewer.username}`,
     value: reviewer.id,

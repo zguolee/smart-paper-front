@@ -39,7 +39,7 @@ export interface UserInfoModel {
 
 export type UsersStrategy = 'all' | 'author' | 'reviewer' | 'editor' | 'admin'
 
-export type UsersPageParams = BasicPageParams & { strategy: UsersStrategy }
+export type UsersPageParams = BasicPageParams & { strategy?: UsersStrategy; username?: string }
 
 export type GetUsersModel = BasicFetchResult<UserInfoModel>
 
