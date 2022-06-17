@@ -8,30 +8,20 @@ const { t } = useI18n()
 const message = useMessage()
 
 const checkStrategy = ref<UsersStrategy>('all')
+const usersResult = ref<{ items: UserInfoModel[]; total: number }>()
+const paginationState = ref<{ page: number; pageSize: number }>({ page: 1, pageSize: 10 })
+const searchUsername = ref<string>('')
 
-const usersResult = ref<{
-  items: UserInfoModel[]
-  total: number
-}>()
-
-const paginationState = ref<{
-  page: number
-  pageSize: number
-}>({
-  page: 1,
-  pageSize: 10,
-})
-
-const getUsersList = async (
-  page: number,
-  pageSize: number,
-  strategy: UsersStrategy,
-) => {
-  const res = await getUsersApi({ page, pageSize, strategy })
-  usersResult.value = res
+const getUsersList = async (page: number, pageSize: number, strategy: UsersStrategy, username?: string) => {
+  usersResult.value = await getUsersApi({ page, pageSize, strategy, username })
 }
 
-const reload = () => getUsersList(paginationState.value.page, paginationState.value.pageSize, checkStrategy.value)
+const handleSearch = async (e: MouseEvent) => {
+  e.preventDefault()
+  getUsersList(1, paginationState.value.pageSize, checkStrategy.value, searchUsername.value)
+}
+
+const reload = () => getUsersList(paginationState.value.page, paginationState.value.pageSize, checkStrategy.value, searchUsername.value)
 
 reload()
 
@@ -103,20 +93,28 @@ const handleSubmit = (e: MouseEvent) => {
         <n-h2>
           {{ t('users.index.user_list') }}
         </n-h2>
-        <n-radio-group v-model:value="checkStrategy">
-          <n-radio-button value="all">
-            {{ t('users.index.actions.all') }}
-          </n-radio-button>
-          <n-radio-button value="author">
-            {{ t('users.index.actions.author') }}
-          </n-radio-button>
-          <n-radio-button value="reviewer">
-            {{ t('users.index.actions.reviewer') }}
-          </n-radio-button>
-          <n-radio-button value="editor">
-            {{ t('users.index.actions.editor') }}
-          </n-radio-button>
-        </n-radio-group>
+        <div flex="~ gap-2" justify="center" items="center">
+          <n-input-group>
+            <n-input v-model:value="searchUsername" clearable class="!w-100" placeholder="Please input username" />
+            <n-button type="primary" ghost @click="handleSearch">
+              Search
+            </n-button>
+          </n-input-group>
+          <n-radio-group v-model:value="checkStrategy">
+            <n-radio-button value="all">
+              {{ t('users.index.actions.all') }}
+            </n-radio-button>
+            <n-radio-button value="author">
+              {{ t('users.index.actions.author') }}
+            </n-radio-button>
+            <n-radio-button value="reviewer">
+              {{ t('users.index.actions.reviewer') }}
+            </n-radio-button>
+            <n-radio-button value="editor">
+              {{ t('users.index.actions.editor') }}
+            </n-radio-button>
+          </n-radio-group>
+        </div>
       </div>
       <n-table class="mt-4 text-center" :single-line="false">
         <thead>

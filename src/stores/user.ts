@@ -1,6 +1,6 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import type { UserInfo } from './types'
-import type { RoleEnum } from '~/enums/roleEnum'
+import { RoleEnum } from '~/enums/roleEnum'
 import { getAuthCache, setAuthCache } from '~/utils/auth'
 import { ROLES_KEY, TOKEN_KEY, USER_INFO_KEY } from '~/enums/cacheEnum'
 import { PageEnum } from '~/enums/pageEnum'
@@ -15,6 +15,7 @@ export const useUserStore = defineStore('user', () => {
   const userToken = ref<string | undefined>()
   const userRoleList = ref<RoleEnum[]>([])
   const sessionTimeout = ref(false)
+  const currentRole = ref<RoleEnum>()
 
   const getUserInfo = (): UserInfo => userInfo.value || getAuthCache<UserInfo>(USER_INFO_KEY) || {}
 
@@ -22,6 +23,8 @@ export const useUserStore = defineStore('user', () => {
 
   const getUserRoleList = (): RoleEnum[] =>
     userRoleList.value.length ? userRoleList.value : getAuthCache<RoleEnum[]>(ROLES_KEY)
+
+  const getCurrentRole = (): RoleEnum => currentRole.value || RoleEnum.TEST
 
   const setUserInfo = (info: UserInfo) => {
     userInfo.value = info
@@ -37,8 +40,13 @@ export const useUserStore = defineStore('user', () => {
     userRoleList.value = roleList
     setAuthCache(ROLES_KEY, roleList)
   }
+
   const setSessionTimeout = (flag: boolean) => {
     sessionTimeout.value = flag
+  }
+
+  const setCurrentRole = (role: RoleEnum) => {
+    currentRole.value = role
   }
 
   const resetState = () => {
@@ -46,6 +54,7 @@ export const useUserStore = defineStore('user', () => {
     userToken.value = ''
     userRoleList.value = []
     sessionTimeout.value = false
+    currentRole.value = RoleEnum.TEST
   }
 
   const getUserInfoAction = async () => {
@@ -54,6 +63,7 @@ export const useUserStore = defineStore('user', () => {
     const roleList = roles.map(item => item.value) as RoleEnum[]
     setUserInfo(userInfo)
     setUserRoleList(roleList)
+    setCurrentRole(roleList[0])
     return userInfo
   }
 
@@ -86,10 +96,12 @@ export const useUserStore = defineStore('user', () => {
     getUserInfo,
     getUserToken,
     getUserRoleList,
+    getCurrentRole,
     setUserInfo,
     setUserToken,
     setUserRoleList,
     setSessionTimeout,
+    setCurrentRole,
     resetState,
     login,
     logout,

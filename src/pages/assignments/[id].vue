@@ -2,8 +2,9 @@
 import type { FormInst } from 'naive-ui'
 import { useMessage } from 'naive-ui'
 import type { PreprintModel } from '~/apis/sys/model/preprintModel'
-import { distributionPreprintApi, getPreprintDetailApi } from '~/apis/sys/preprint'
+import { distributionPreprintApi, getPreprintDetailApi, updatePreprintStatusApi } from '~/apis/sys/preprint'
 import { getUsersApi } from '~/apis/sys/user'
+import { formatDate } from '~/utils/dayjs'
 import { downloadByUrl } from '~/utils/file/download'
 
 const props = defineProps<{ id: string }>()
@@ -12,11 +13,7 @@ const { t } = useI18n()
 const router = useRouter()
 const message = useMessage()
 
-const reviewerOptions = ref<{
-  label: string
-  value: string
-}[]>([])
-
+const reviewerOptions = ref<{ label: string; value: string }[]>([])
 const formRef = ref<FormInst | null>(null)
 const formValue = ref({
   reviewers: [null],
@@ -34,7 +31,6 @@ const handlePreprintDetail = async (id: string) => {
 handlePreprintDetail(props.id)
 
 const removeReviewerItem = (index: number) => formValue.value.reviewers.splice(index, 1)
-
 const addReviewerItem = () => formValue.value.reviewers.push(null)
 
 const handleSearch = async (query: string) => {
@@ -66,6 +62,30 @@ const handleDownload = (type: 'document' | 'code') => {
     downloadByUrl({ url: preprintDetail.value?.pdfUrl as string })
   else
     downloadByUrl({ url: preprintDetail.value?.sourceUrl as string })
+}
+
+const statusList = computed(() => {
+  const list = ['First trial', 'Reception', 'Accepted', 'Rejected', 'Pay', 'Finish']
+  const len = preprintDetail.value?.statusProgresses?.length as number
+  return list.slice(len >= 3 ? len + 1 : len)
+})
+
+const handlePushStatus = async (title: string) => {
+  const msg: any = {
+    'First trial': '',
+    'Reception': 'Your paper has been received, please wait for the review.',
+    'Accepted': 'Your paper has been accepted, please pay for the publication.',
+    'Rejected': 'Your paper has been rejected, please check the mailbox for details.',
+    'Pay': 'You have paid for the publication, please wait for the publication.',
+    'Finish': 'Your paper has been published, please check the mailbox for details.',
+  }
+  const res = await updatePreprintStatusApi(props.id, { statusProgress: { title, content: msg[title] } })
+  if (res.id) {
+    handlePreprintDetail(props.id)
+    message.success(t('assignments.preprints.status.success'))
+  }
+
+  else { message.error(t('assignments.preprints.status.failure')) }
 }
 </script>
 
@@ -127,8 +147,9 @@ const handleDownload = (type: 'document' | 'code') => {
           </n-tag>
           <n-form-item class="flex-1">
             <n-select
-              v-model:value="formValue.reviewers[_reviewerIdx]" filterable placeholder="Please search reviewer by email or username"
-              :options="reviewerOptions" clearable remote @search="handleSearch"
+              v-model:value="formValue.reviewers[_reviewerIdx]" filterable
+              placeholder="Please search reviewer by email or username" :options="reviewerOptions" clearable remote
+              @search="handleSearch"
             />
           </n-form-item>
           <n-button secondary type="error" @click="removeReviewerItem(_reviewerIdx)">
@@ -140,15 +161,67 @@ const handleDownload = (type: 'document' | 'code') => {
         <div text="xl" i="carbon-add" />
         Click here to add more reviewer
       </n-button>
-      <div class="mx-auto w-40%" flex="~ gap-6" justify-center items-center>
-        <n-button class="flex-1 mt-10" type="primary" @click="handleSubmit">
-          Save
-        </n-button>
-        <n-button class="flex-1 mt-10" @click="router.back()">
-          Back
-        </n-button>
-      </div>
     </n-form>
+    <n-h3>Review</n-h3>
+    <n-table class="mt-4 text-center" :single-line="false">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Opinion</th>
+          <th>Content</th>
+          <th>Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="comment, _idx of preprintDetail?.comments" :key="_idx">
+          <td>{{ _idx + 1 }}</td>
+          <td>
+            {{ comment.reviewer.firstName }} {{ comment.reviewer.lastName }}
+          </td>
+          <td> {{ comment.opinion }}</td>
+          <td>
+            {{ comment.content }}
+          </td>
+          <td>
+            {{ formatDate(comment.createdAt, 'YYYY-MM-DD HH:mm:ss') }}
+          </td>
+        </tr>
+      </tbody>
+    </n-table>
+    <n-h3>Review Progress</n-h3>
+    <n-timeline horizontal>
+      <template v-for="status, _idx of preprintDetail?.statusProgresses?.reverse()" :key="_idx">
+        <n-timeline-item
+          :type="status.title === 'Rejected' ? 'error' : 'success'" :title="status.title"
+          :time="formatDate(status.createdAt, 'YYYY-MM-DD HH:mm:ss')"
+        >
+          <template #default>
+            {{ status.content }}
+          </template>
+        </n-timeline-item>
+      </template>
+      <template v-for="title, _idx of statusList" :key="_idx">
+        <n-timeline-item class="cursor-pointer" :title="title" line-type="dashed">
+          <template #default>
+            <n-popconfirm v-if="!!!_idx || (title === 'Rejected' && _idx === 1)" @positive-click="handlePushStatus(title)">
+              <template #trigger>
+                Click to change
+              </template>
+              Are you sure to update status?
+            </n-popconfirm>
+          </template>
+        </n-timeline-item>
+      </template>
+    </n-timeline>
+    <div class="mx-auto w-40%" flex="~ gap-6" justify-center items-center>
+      <n-button class="flex-1 mt-10" type="primary" @click="handleSubmit">
+        Save
+      </n-button>
+      <n-button class="flex-1 mt-10" @click="router.back()">
+        Back
+      </n-button>
+    </div>
   </div>
 </template>
 

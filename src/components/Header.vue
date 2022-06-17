@@ -2,6 +2,7 @@
 import { toggleDark } from '~/composables'
 import { getAppEnvConfig } from '~/utils/env'
 import { useUserStore } from '~/stores/user'
+import type { RoleEnum } from '~/enums/roleEnum'
 
 const userStore = useUserStore()
 const router = useRouter()
@@ -9,7 +10,8 @@ const { t, availableLocales, locale } = useI18n()
 const { VITE_APP_TITLE } = getAppEnvConfig()
 
 const userInfo = computed(() => userStore.getUserInfo())
-const rolesOptions = computed(() => userInfo.value.roles.map(role => ({ label: role.title, value: role.value })))
+const rolesOptions = computed(() => userStore.getUserInfo().roles.map(role => ({ label: role.title, value: role.value })))
+const currentRole = computed(() => userStore.getCurrentRole())
 
 const toggleLocales = () => {
   const locales = availableLocales
@@ -23,10 +25,15 @@ const roleIcons: any = {
 }
 
 const routerPath: any = {
-  admin: 'dashboard',
+  admin: 'users',
   author: 'dashboard',
   editor: 'assignments',
   reviewer: 'review',
+}
+
+const handleRoleClick = (role: RoleEnum) => {
+  userStore.setCurrentRole(role)
+  router.replace(`/${routerPath[role]}`)
 }
 </script>
 
@@ -42,21 +49,21 @@ const routerPath: any = {
           {{ VITE_APP_TITLE }}
         </div>
       </div>
-      <n-button class="text-xl" text tag="a" target="_blank" type="primary" @click="router.replace('/dashboard')">
+      <n-button class="text-xl" text tag="a" target="_blank" type="primary">
         {{ t('menu.preprints') }}
       </n-button>
-      <n-button class="text-xl" text tag="a" target="_blank" type="primary" @click="router.replace('/users')">
+      <!-- <n-button v-if="currentRole === RoleEnum.ADMIN" class="text-xl" text tag="a" target="_blank" type="primary" @click="router.replace('/users')">
         {{ t('menu.users') }}
-      </n-button>
+      </n-button> -->
     </div>
     <div flex="~ gap-2" justify-center items-center>
       <div
         class="cursor-pointer justify-center items-center" flex="~ gap-2"
         @click="router.push(`/users/${userInfo.id}`)"
       >
-        <n-avatar round size="small" :src="userInfo.avatar" />
+        <!-- <n-avatar round size="small" :src="userInfo.avatar" /> -->
         <div hover="text-teal-600">
-          {{ userInfo.firstName }}
+          {{ `${userInfo.firstName} ${userInfo.lastName}` }}
         </div>
       </div>
       <NDivider vertical />
@@ -65,8 +72,8 @@ const routerPath: any = {
         <template v-for="role, _roleIdx of rolesOptions" :key="_roleIdx">
           <div
             class="cursor-pointer transition ease-in-out duration-200" hover="text-teal-600"
-            :class="roleIcons[role.value]" :title="role.label"
-            @click="router.replace(`/${routerPath[role.value]}`)"
+            :class="[roleIcons[role.value], currentRole === role.value ? 'text-teal-600' : '']" :title="role.label"
+            @click="handleRoleClick(role.value)"
           />
         </template>
       </div>

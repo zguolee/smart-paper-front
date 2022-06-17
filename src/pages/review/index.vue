@@ -8,27 +8,20 @@ const { t } = useI18n()
 const router = useRouter()
 const userStore = useUserStore()
 
-const preprintResult = ref<{
-  items: PreprintModel[]
-  total: number
-}>()
+const preprintResult = ref<{ items: PreprintModel[]; total: number }>()
+const paginationState = ref<{ page: number; pageSize: number }>({ page: 1, pageSize: 10 })
+const searchTitle = ref<string>('')
 
-const paginationState = ref<{
-  page: number
-  pageSize: number
-}>({
-  page: 1,
-  pageSize: 10,
-})
-
-const getPreprintList = async (
-  page: number,
-  pageSize: number,
-) => {
-  const res = await getPreprintListApi({ page, pageSize })
+const getPreprintList = async (page: number, pageSize: number, title?: string) => {
+  const res = await getPreprintListApi({ page, pageSize, title })
   preprintResult.value = res
 }
 getPreprintList(paginationState.value.page, paginationState.value.pageSize)
+
+const handleSearch = (e: MouseEvent) => {
+  e.preventDefault()
+  getPreprintList(1, paginationState.value.pageSize, searchTitle.value)
+}
 
 const handlePreprintList = (page: number) => {
   paginationState.value.page = page
@@ -43,9 +36,19 @@ const checkReviewed = (item: PreprintModel) => {
 <template>
   <div>
     <div class="rounded-lg p-10 w-80%" bg="white dark:gray-700" m="t-10 auto">
-      <n-h2>
-        {{ t('review.index.preprint_list') }}
-      </n-h2>
+      <div m="b-2" flex="~" justify="between" items="center">
+        <n-h2>
+          {{ t('review.index.preprint_list') }}
+        </n-h2>
+        <div>
+          <n-input-group>
+            <n-input v-model:value="searchTitle" clearable class="!w-100" placeholder="Please input title" />
+            <n-button type="primary" ghost @click="handleSearch">
+              Search
+            </n-button>
+          </n-input-group>
+        </div>
+      </div>
       <n-table class="mt-4 text-center" :single-line="false">
         <thead>
           <tr>
@@ -69,7 +72,7 @@ const checkReviewed = (item: PreprintModel) => {
               </n-ellipsis>
             </td>
             <td>
-              <div flex="~ gap-2" items-center justify-start>
+              <div flex="~ col gap-2" items-start justify-start>
                 <template v-for="author, _idx of JSON.parse(preprint.authors)" :key="_idx">
                   <n-badge :dot="author.primary">
                     <n-tag> {{ `${author.firstName} ${author.lastName}` }} </n-tag>

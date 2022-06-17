@@ -51,6 +51,9 @@ assignments:
     distribution:
       success: Successfully assigned preprint
       failure: Failed to assign preprint
+    status:
+      success: Successfully updated preprint status
+      failure: Failed to update preprint status
 
 review:
   index:

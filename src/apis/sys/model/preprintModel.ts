@@ -39,6 +39,6 @@ export interface PreprintModel {
   reviewers: AuthorModel[]
 }
 
-export type PreprintParams = BasicPageParams
+export type PreprintParams = BasicPageParams & { title?: string }
 
 export type GetPreprintListModel = BasicFetchResult<PreprintModel>

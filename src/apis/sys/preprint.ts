@@ -23,3 +23,6 @@ export const reviewPreprintApi = (id: string, params: any) =>
 export const distributionPreprintApi = (id: string, params: any) =>
   defHttp.put<PreprintModel>({ url: `${Api.Preprints}/${id}/distribution`, params })
 
+export const updatePreprintStatusApi = (id: string, params: any) =>
+  defHttp.put<PreprintModel>({ url: `${Api.Preprints}/${id}/status`, params })
+
