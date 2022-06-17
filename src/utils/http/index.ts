@@ -192,6 +192,8 @@ function createAxios(options?: Partial<CreateAxiosOptions>) {
           errorMessageMode: 'message',
           // 接口地址
           apiUrl: '/api',
+          // 接口拼接地址
+          urlPrefix,
           //  是否加入时间戳
           joinTime: false,
           // 忽略重复请求

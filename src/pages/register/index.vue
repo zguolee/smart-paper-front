@@ -19,9 +19,9 @@ const formRef = ref<FormInst | null>(null)
 const rPasswordFormItemRef = ref<FormItemInst | null>(null)
 
 const modelRef = ref<ModelType>({
-  username: 'admin@mail.com',
-  password: '123456',
-  reenteredPassword: '123456',
+  username: '',
+  password: '',
+  reenteredPassword: '',
 })
 
 function validatePasswordSame(rule: FormItemRule, value: string): boolean {

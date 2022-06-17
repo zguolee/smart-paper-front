@@ -19,8 +19,8 @@ const { VITE_APP_TITLE } = getAppEnvConfig()
 const formRef = ref<FormInst | null>(null)
 
 const modelRef = ref<ModelType>({
-  username: 'admin@mail.com',
-  password: '123456',
+  username: '',
+  password: '',
 })
 
 const rules: FormRules = {

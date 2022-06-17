@@ -27,6 +27,7 @@ const handlePreprintDetail = async (id: string) => {
     value: reviewer.id,
   })) as any
   formValue.value.reviewers = preprintDetail.value.reviewers.map(item => item.id) as any
+  preprintDetail.value.statusProgresses = preprintDetail.value?.statusProgresses?.reverse() || []
 }
 handlePreprintDetail(props.id)
 
@@ -191,7 +192,7 @@ const handlePushStatus = async (title: string) => {
     </n-table>
     <n-h3>Review Progress</n-h3>
     <n-timeline horizontal>
-      <template v-for="status, _idx of preprintDetail?.statusProgresses?.reverse()" :key="_idx">
+      <template v-for="status, _idx of preprintDetail?.statusProgresses" :key="_idx">
         <n-timeline-item
           :type="status.title === 'Rejected' ? 'error' : 'success'" :title="status.title"
           :time="formatDate(status.createdAt, 'YYYY-MM-DD HH:mm:ss')"

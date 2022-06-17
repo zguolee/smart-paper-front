@@ -101,11 +101,7 @@ const handleShowPreprintStatusProgresses = (preprint: PreprintModel) => {
               {{ formatDate(preprint.updatedAt) }}
             </td>
             <td>
-              <NButton
-                type="primary" dashed
-                :disabled="!preprint.statusProgresses?.some(item => item.title === 'Rejected') && !(preprint.statusProgresses?.length === 1)"
-                @click="router.push(`/dashboard/preprints/create/${preprint.id}`)"
-              >
+              <NButton type="primary" dashed @click="router.push(`/dashboard/preprints/create/${preprint.id}`)">
                 Detail
               </NButton>
             </td>
