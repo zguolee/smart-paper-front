@@ -1,22 +1,109 @@
 menu:
   preprints: 预印本
+  users: 用户
 
 dashboard:
-  preprints: 预印本
+  index:
+    preprint_list: 预印本列表
+    actions:
+      all: 全部
+      accepted: 已接受
+      rejected: 已拒绝
+      create_new_preprint: 创建新的预印本
+    preprint:
+      title_abstract: 标题和摘要
+      journal: 期刊
+      year: 年份
+      authors: 作者
+      status: 状态
+      update_time: 更新时间
+      actions: 操作
+  preprints:
+    index:
+      create_preprint: 创建预印本
+    create:
+      success: 创建预印本成功
+      failure: 创建预印本失败
+      upload:
+        success: 上传成功
+        failure: 上传失败
+    update:
+      success: 更新预印本成功
+      failure: 更新预印本失败
+
+assignments:
+  index:
+    preprint_list: 预印本列表
+    preprint:
+      title_abstract: 标题和摘要
+      journal: 期刊
+      year: 年份
+      authors: 作者
+      reviewers: 评审人
+      status: 状态
+      update_time: 更新时间
+      actions: 操作
+  preprints:
+    distribution:
+      success: 分配预印本成功
+      failure: 分配预印本失败
+    status:
+      success: 更新预印本状态成功
+      failure: 更新预印本状态失败
+
+review:
+  index:
+    preprint_list: 预印本列表
+    preprint:
+      title_abstract: 标题和摘要
+      journal: 期刊
+      year: 年份
+      authors: 作者
+      reviewers: 评审人
+      status: 状态
+      update_time: 更新时间
+      actions: 操作
+  preprints:
+    index:
+      create_preprint: 创建预印本
+    update:
+      success: 更新预印本成功
+      failure: 更新预印本失败
+
+users:
+  index:
+    user_list: 用户列表
+    actions:
+      all: 全部
+      author: 作者
+      reviewer: 评审
+      editor: 编辑
+    user:
+      name: 姓名
+      email: 邮箱
+      organization: 组织
+      institute: 学院
+      avatar: 头像
+      roles: 角色
+      update_time: 更新时间
+      actions: 操作
+    update:
+      user_info: 用户信息
+      name: 姓名
+      email: 邮箱
+      organization: 组织
+      institute: 学院
+      avatar: 头像
+      roles: 角色
+      success: 更新用户信息成功
+      failure: 更新用户信息失败
 
 button:
-  about: 关于
-  back: 返回
-  go: 确定
-  home: 首页
-  toggle_dark: 切换深色模式
-  toggle_langs: 切换语言
+  about: About
+  back: Back
+  go: GO
+  home: Home
+  toggle_dark: Toggle dark mode
+  toggle_langs: Change languages
 
-intro:
-  desc: 固执己见的 Vite 项目模板
-  dynamic-route: 动态路由演示
-  hi: 你好，{name}
-  aka: 也叫
-  whats-your-name: 输入你的名字
-
-not-found: 未找到页面
+not-found: Not found
