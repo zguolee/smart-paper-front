@@ -2,11 +2,16 @@ import type { GetPreprintListModel, PreprintModel, PreprintParams } from './mode
 import { defHttp } from '~/utils/http'
 
 enum Api {
+  PreprintList = '/preprints/list',
   Preprints = '/preprints',
+  WaitPreprints = '/preprints',
 }
 
 export const getPreprintListApi = (params: PreprintParams) =>
-  defHttp.get<GetPreprintListModel>({ url: Api.Preprints, params })
+  defHttp.get<GetPreprintListModel>({ url: Api.PreprintList, params })
+
+export const getWaitPreprintListApi = (params: PreprintParams) =>
+  defHttp.get<GetPreprintListModel>({ url: Api.WaitPreprints, params })
 
 export const getPreprintDetailApi = (id: string) =>
   defHttp.get<PreprintModel>({ url: `${Api.Preprints}/${id}` })

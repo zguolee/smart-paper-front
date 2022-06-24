@@ -9,6 +9,7 @@ import { deepMerge, setObjToUrlParams } from '~/utils'
 import { getToken } from '~/utils/auth'
 import { isString } from '~/utils/is'
 
+// const apiUrl = 'http://192.168.2.143:8080/api'
 const apiUrl = 'http://121.41.227.161:18080/api'
 const urlPrefix = ''
 

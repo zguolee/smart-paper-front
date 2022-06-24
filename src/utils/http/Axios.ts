@@ -156,7 +156,7 @@ export class VAxios {
       headers: {
         'Content-type': ContentTypeEnum.FORM_DATA,
         // @ts-expect-error
-        'ignoreCancelToken': true,
+        // 'ignoreCancelToken': true,
       },
     })
   }

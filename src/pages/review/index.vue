@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getPreprintListApi } from '~/apis/sys/preprint'
+import { getWaitPreprintListApi } from '~/apis/sys/preprint'
 import type { PreprintModel } from '~/apis//sys/model/preprintModel'
 import { useUserStore } from '~/stores/user'
 import { formatDate } from '~/utils/dayjs'
@@ -13,7 +13,7 @@ const paginationState = ref<{ page: number; pageSize: number }>({ page: 1, pageS
 const searchTitle = ref<string>('')
 
 const getPreprintList = async (page: number, pageSize: number, title?: string) => {
-  const res = await getPreprintListApi({ page, pageSize, title })
+  const res = await getWaitPreprintListApi({ page, pageSize, title })
   preprintResult.value = res
 }
 getPreprintList(paginationState.value.page, paginationState.value.pageSize)
